@@ -172,6 +172,7 @@ export function makeWorld(opts = {}) {
     rng: opts.rng || Math.random,
     overAt: -1,
     mergedMaxTier: -1,   // 本局（或本轮推演）合出的最大 tier
+    freed: 0,            // 本轮推演里「合成释放掉的面积」累计（只做记账，不参与物理）
     stepCount: 0,        // 已经跑了多少物理帧（诊断用）
     mergeTrace: null,    // 诊断：把每次合成记下来（默认关闭，零开销）
   };
@@ -194,6 +195,7 @@ export function resetWorld(w, opts = {}) {
   w.drops = 0;
   w.overAt = -1;
   w.mergedMaxTier = -1;
+  w.freed = 0;
   w.pending = pickSpawnTier(w);
   w.next = pickSpawnTier(w, w.pending);
   return w;
@@ -208,27 +210,35 @@ function updateTrig(b) {
   b.psin = Math.sin(b.angle);
 }
 
-function syncParts(b) {
-  const c = b.pcos, s = b.psin;
-  const f = b.flat || (b.flat = pack(shapeOfByParts(b.parts)).flat);
-  const r = b.r, x = b.x, y = b.y;
-  const wx = b.wx, wy = b.wy, ws = b.ws;
-  const n = b.np;
+/* 局部坐标缓存：把「小圆的局部偏移 × r」和「小圆半径 × r」提前算好。
+ * 这两个量只取决于外形和 r（同一个等级恒定），与球的位置/角度无关，
+ * 所以每颗球算一次、克隆时直接共享引用即可。运算结果与逐次现算完全相同。 */
+function localOf(sh, r) {
+  if (sh.loc && sh.loc.r === r) return sh.loc;
+  const f = sh.flat || pack(sh).flat;
+  const n = f.length / 3;
+  const lx = new Float64Array(n), ly = new Float64Array(n), ls = new Float64Array(n);
   for (let i = 0, k = 0; i < n; i++, k += 3) {
-    const ox = f[k] * r, oy = f[k + 1] * r;
-    wx[i] = x + ox * c - oy * s;
-    wy[i] = y + ox * s + oy * c;
-    ws[i] = f[k + 2] * r;
+    lx[i] = f[k] * r;
+    ly[i] = f[k + 1] * r;
+    ls[i] = f[k + 2] * r;
   }
+  sh.loc = { r, lx, ly, ls };
+  return sh.loc;
 }
 
-/* 兜底：给一个 parts 列表找回它的 packed 版本（正常情况下 ball.flat 一定存在） */
-function shapeOfByParts(parts) {
-  for (const list of [SHAPES, EXACT_SHAPES]) {
-    if (!list) continue;
-    for (const sh of list) if (sh && sh.parts === parts) return sh;
+function syncParts(b) {
+  const c = b.pcos, s = b.psin;
+  const x = b.x, y = b.y;
+  const lx = b.lx, ly = b.ly, ls = b.ls;
+  const wx = b.wx, wy = b.wy, ws = b.ws;
+  const n = b.np;
+  for (let i = 0; i < n; i++) {
+    const ox = lx[i], oy = ly[i];
+    wx[i] = x + ox * c - oy * s;
+    wy[i] = y + ox * s + oy * c;
+    ws[i] = ls[i];
   }
-  return pack({ rb: 1, parts });
 }
 
 export function makeBall(w, x, y, tier, vx, vy) {
@@ -236,6 +246,7 @@ export function makeBall(w, x, y, tier, vx, vy) {
   const m = r * r;
   const sh = shapeOf(tier);
   const n = sh.parts.length;
+  const loc = localOf(sh, r);
   const b = {
     x, y, vx: vx || 0, vy: vy || 0,
     px: x, py: y,
@@ -249,36 +260,37 @@ export function makeBall(w, x, y, tier, vx, vy) {
     pvx: 0, pvy: 0,
     sq: 0, sqA: 0,
     parts: sh.parts,
-    flat: sh.flat || pack(sh).flat,
     np: n,
     pcos: 1, psin: 0,
     rb: sh.rb * r,
     rbe: (sh.ext || sh.rb) * r,
+    lx: loc.lx, ly: loc.ly, ls: loc.ls,   // 局部偏移缓存（只读，克隆时共享）
     wx: new Float32Array(n),
     wy: new Float32Array(n),
     ws: new Float32Array(n),
+    gen: 0,                 // 合成代数（只做诊断；放进字面量里，避免合成后动态加属性换形状）
   };
   syncParts(b);
   return b;
 }
 
-/* 深拷贝一颗球（推演用；parts 是共享引用，不必复制） */
+/* 深拷贝一颗球（推演用；parts 是共享引用，不必复制）
+ *
+ * 注意：这里必须用对象字面量，并且键的顺序与 makeBall / adoptFromGame 完全一致。
+ * 早先用 Object.create(null) + 逐个赋值，V8 会把这种对象放进「字典模式」，
+ * 之后每一次属性读写都走哈希查找，而推演里跑的全是克隆出来的球（实测慢得多）。
+ * 字面量 + 统一形状 = 同样的数值、同样的运算顺序，只是属性访问变快。 */
 export function cloneBall(b, now) {
-  const n = b.parts.length;
-  const c = Object.create(null);
-  c.x = b.x; c.y = b.y; c.vx = b.vx; c.vy = b.vy;
-  c.px = b.px; c.py = b.py;
-  c.r = b.r; c.tier = b.tier; c.angle = b.angle;
-  c.mass = b.mass; c.invMass = b.invMass;
-  c.bornAt = b.bornAt; c.overTime = b.overTime;
-  c.landed = b.landed; c.dead = b.dead; c.contacts = b.contacts;
-  c.pvx = b.pvx; c.pvy = b.pvy;
-  c.sq = b.sq; c.sqA = b.sqA;
-  c.parts = b.parts; c.flat = b.flat; c.np = b.np; c.rb = b.rb; c.rbe = b.rbe;
-  c.pcos = b.pcos; c.psin = b.psin;
-  c.wx = new Float32Array(n); c.wy = new Float32Array(n); c.ws = new Float32Array(n);
-  c.wx.set(b.wx); c.wy.set(b.wy); c.ws.set(b.ws);
-  return c;
+  return {
+    x: b.x, y: b.y, vx: b.vx, vy: b.vy, px: b.px, py: b.py,
+    r: b.r, tier: b.tier, angle: b.angle, mass: b.mass, invMass: b.invMass,
+    bornAt: b.bornAt, overTime: b.overTime, landed: b.landed, dead: b.dead, contacts: b.contacts,
+    pvx: b.pvx, pvy: b.pvy, sq: b.sq, sqA: b.sqA,
+    parts: b.parts, np: b.np, pcos: b.pcos, psin: b.psin, rb: b.rb, rbe: b.rbe,
+    lx: b.lx, ly: b.ly, ls: b.ls,        // 只读缓存，直接共享
+    wx: new Float32Array(b.wx), wy: new Float32Array(b.wy), ws: new Float32Array(b.ws),
+    gen: b.gen || 0,
+  };
 }
 
 /* ------------------------------------------------------------------ 投放 -- */
@@ -640,6 +652,7 @@ export function processMerges(w, merges) {
       w.freeze = CFG.FREEZE_MS / 1000;
       if (CFG.MAX_MERGE_GIVES_REVIVE) w.revives++;
       if (tier > (w.mergedMaxTier ?? -1)) w.mergedMaxTier = tier;
+      w.freed += a.r * a.r + b.r * b.r;      // 两只神奶蛙一起没了：整块面积都还给了盘面
       events.push({ tier, x: mx, y: my, score: CFG.MAX_BONUS, bonus: true });
       if (w.mergeTrace) w.mergeTrace.push({ tier, x: mx, y: my, gen, bonus: true, step: w.stepCount || 0 });
     } else {
@@ -655,6 +668,9 @@ export function processMerges(w, merges) {
 
       addScore(w, MERGE_SCORE[nt]);
       gained += MERGE_SCORE[nt];
+      /* 记账：这一合净释放了多少面积（两颗消失、一颗更大的顶上）—— 只用于评估函数，
+         不参与物理。加大果的权重靠的是面积本身随半径平方增长。 */
+      w.freed += a.r * a.r + b.r * b.r - nb.r * nb.r;
       if (nt === CFG.MAX_TIER) w.flash = 1;
       events.push({ tier: nt, x: mx, y: my, score: MERGE_SCORE[nt], bonus: false });
       if (w.mergeTrace) w.mergeTrace.push({ tier: nt, x: mx, y: my, gen, bonus: false, step: w.stepCount || 0 });
@@ -777,6 +793,7 @@ export function cloneWorld(src, dst) {
   w.rng = src.rng;
   w.overAt = src.overAt;
   w.mergedMaxTier = src.mergedMaxTier;
+  w.freed = src.freed;
   w.lastMerges = src.lastMerges;
   w.lastMergeGain = src.lastMergeGain;
   w.lastMaxMergeTier = src.lastMaxMergeTier;
@@ -849,6 +866,7 @@ export function adoptFromGame(w, gameState, shapes, nowMs) {
     const g = gameState.balls[i];
     const sh = shapeOf(g.tier);
     const n = sh.parts.length;
+    const loc = localOf(sh, g.r);
     const b = {
       x: g.x, y: g.y, vx: g.vx, vy: g.vy, px: g.px, py: g.py,
       r: g.r, tier: g.tier, angle: g.angle,
@@ -857,10 +875,12 @@ export function adoptFromGame(w, gameState, shapes, nowMs) {
       landed: g.landed, dead: !!g.dead, contacts: g.contacts || 0,
       pvx: g.pvx || 0, pvy: g.pvy || 0,
       sq: g.sq || 0, sqA: g.sqA || 0,
-      parts: sh.parts, flat: sh.flat || pack(sh).flat, np: n, rb: sh.rb * g.r,
+      parts: sh.parts, np: n,
+      pcos: 1, psin: 0, rb: sh.rb * g.r,
       rbe: (sh.ext || sh.rb) * g.r,
-      pcos: 1, psin: 0,
+      lx: loc.lx, ly: loc.ly, ls: loc.ls,
       wx: new Float32Array(n), wy: new Float32Array(n), ws: new Float32Array(n),
+      gen: 0,
     };
     updateTrig(b);            // 角度是从游戏那边搬过来的，缓存要先算好
     syncParts(b);

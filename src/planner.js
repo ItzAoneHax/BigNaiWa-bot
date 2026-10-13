@@ -32,6 +32,11 @@ export const DEFAULT_WEIGHTS = {
   bigHigh: 0.80,   // 大果被顶到高处
   buried:  0.60,   // 大果压小果（被埋的小果就废了）
   frag:    0.25,   // 碎块惩罚
+  /* 用户反馈的两项「长久受益」（默认关闭，用 tools/tune.mjs 验证过才开）：
+     stuck —— 底部堆着没有同级伙伴的大果（占地方又合不掉）
+     space —— 这一手合成释放掉的空间（大果收益随半径平方增长） */
+  stuck:   0.00,
+  space:   0.00,
   dead:   -10000,  // 推演中判负（手里没有复活币时的死局）
   /* 有复活币时，风险不再等于死：允许把场面堆得更高，换更大的合成空间
      （每 2000 分、以及两只神奶蛙相撞都会再发币） */
@@ -156,10 +161,34 @@ export function features(w) {
   const gap = Math.max(0, top - SOFT_TOP);
   const topRisk = gap === 0 ? 1 + (SOFT_TOP - top) / 40 : 0;
 
+  /* 「无效大果」：没有同级伙伴的大果 —— 占着地方、又永远合不掉。
+     这正是用户观察到的情况：底部堆了一堆奶蛙，彼此都合不到一起，越堆越高。
+     按面积 (r/100)² 计权：越大的果占地方越多，越该优先把它处理掉。
+     一旦出现了同级伙伴（2.5 倍半径和之内），就不算「无效」了 —— 它有机会合。 */
+  let stuck = 0;
+  for (let i = 0; i < n; i++) {
+    const a = balls[i];
+    if (a.dead || a.tier < 6) continue;
+    let partner = false;
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue;
+      const b = balls[j];
+      if (b.dead || b.tier !== a.tier) continue;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const reach = (a.r + b.r) * 2.5;
+      if (dx * dx + dy * dy < reach * reach) { partner = true; break; }
+    }
+    if (!partner) stuck += (a.r / 100) * (a.r / 100);
+  }
+
   return {
     n, top, above, aboveMass, buried: buried / 10,
     bigPair: bigPair / 12,
     blocked: blocked / 12,
+    stuck: stuck / 4,
+    /* 本轮推演里合成「释放掉的面积」：两颗消失、一颗更大的顶上，净腾出来的空间。
+       加大果的收益随半径平方增长 —— 合掉两只半奶蛙腾出的地方，是合掉两颗葡萄的 160 倍。 */
+    space: (w.freed || 0) / 10000,
     mono: monoDen ? monoNum / 200 : 0,
     overN: Math.min(1, overT / E.CFG.OVER_LIMIT),
     bump: bump / (N_BINS - 1) / 100,
@@ -197,7 +226,25 @@ export function evaluate(w, before, wt = DEFAULT_WEIGHTS) {
   v -= wt.bigHigh * f.bigHigh;
   v -= (wt.buried || 0) * f.buried;
   v -= (wt.fragFruit ? wt.frag * f.n * wt.fragFruit : wt.frag * f.n * 0.15);
+  /* 可选的「材料」项（默认关闭，权重缺省时完全不参与）：盘面上未合成的 2^tier 之和。
+     合成守恒这个量，它是还没变成分数的潜在价值；复活删掉的水果会让它下降，从而被计入代价。 */
+  if (wt.mat) v += wt.mat * tokenMass(w) / 100;
+  /* 「无效大果」惩罚 + 「腾出空间」奖励（默认关闭）。
+     用户的观察：先把顶部消掉只是拿了眼前的分数，底部那一堆合不掉的奶蛙才是长久的病。
+     space 直接奖励「这一手腾出了多少地方」，大果的收益随半径平方增长，
+     所以它会把「合掉两只半奶蛙」排在「多拿 45 分」前面。 */
+  v -= (wt.stuck || 0) * f.stuck;
+  if (wt.space) v += wt.space * f.space;
   return v;
+}
+
+export function tokenMass(w) {
+  let s = 0;
+  for (let i = 0; i < w.balls.length; i++) {
+    const b = w.balls[i];
+    if (!b.dead) s += Math.pow(2, b.tier);
+  }
+  return s;
 }
 
 /* ---------------------------------------------------------------- 工具 ---- */
@@ -229,20 +276,103 @@ export function candidateXs(tier, step, around = null, span = 0) {
   return out;
 }
 
+/* ---------------------------------------------------------------------------
+ *  收敛判定：什么时候可以认为「盘面已经不会再变了」
+ *
+ *  规则一（原有）：瞬时速度 < 25 px/s（= 每帧位移 < 0.42px）。
+ *  规则二（新增）：**整盘净位移**——连续两个窗口里，每颗水果相对上一个
+ *    窗口的位移都小于 1.5px。
+ *
+ *  为什么要加规则二：奶蛙被挤在中间时，碰撞箱解算收敛不了，会一直小幅上下抖
+ *  （位置在 ±0.7px 里来回，速度却一直有 30~200 px/s），于是规则一永远不触发，
+ *  每一次推演都要跑满整个时间窗 —— 这就是「抖动时思考特别慢」的直接原因。
+ *  规则二看的是「走了多远」而不是「走得多快」，这种原地抖动会被正确识别为已停。
+ *
+ *  参数都是量出来的（tools/packed-probe.mjs、tools/jitter-diag.mjs）：
+ *  真停住时每 16 帧的净位移是 0.5~1.2px，而瞬时速度还能尖到 200 px/s。
+ *
+ *  正确性说明：这里改的是「什么时候收工」，**物理本身一个比特都没有动**
+ *  （引擎仍然是逐帧照抄线上），而且规则二比规则一更严格：
+ *  一个正在慢慢滚动（20px/s）的水果会被规则一放行、但不会通过规则二。
+ * ------------------------------------------------------------------------- */
+export const SETTLE = {
+  /* 默认关闭。实测（tools/settle-ab.mjs，5 个盘面）：打开后只省 1~3% 的物理帧，
+     但 5 个盘面里有 1 个换掉了落点 —— 按本项目「决定不逐位相同就必须有证据证明更好」
+     的规矩，在没有跑分证据之前不开。想在抖动盘面上再快一点可以开：
+       NaiwaBot.planner.SETTLE.vibrate = true
+     它只在「整盘每 16 帧净位移 < 1.5px、连续两个窗口」时才收工，物理一个比特没动。 */
+  vibrate: false,
+  vibWindow: 16,      // 窗口长度（帧）；必须是 4 的倍数，才可能和 (i & 3) === 0 对齐
+  vibEps: 1.5,        // 窗口间允许的最大位移（px）
+  vibNeed: 2,         // 连续多少个窗口满足才算「冻住」
+  vibMaxSpeed: 400,   // 抖动幅度上限：再快说明是真的在动，不认「冻住」
+};
+
+const POSE_CAP = 200;                       // 盘面最多约 96 颗
+const posePrev = new Float64Array(POSE_CAP * 3 + 2);
+const poseCur = new Float64Array(POSE_CAP * 3 + 2);
+
+/* 采集姿态：球数、分数、每颗的 (tier, x, y)。返回球数，-1 表示放不下 */
+function capturePose(w, buf) {
+  const nb = w.balls.length;
+  if (nb > POSE_CAP) return -1;
+  buf[0] = nb; buf[1] = w.score;
+  for (let k = 0; k < nb; k++) {
+    const b = w.balls[k];
+    buf[2 + k * 3] = b.tier;
+    buf[3 + k * 3] = b.x;
+    buf[4 + k * 3] = b.y;
+  }
+  return nb;
+}
+
+/* 两个姿态之间的最大位移；球数/分数/等级不一致时返回 Infinity（= 不算冻住） */
+function poseShift(a, b, nb) {
+  if (a[1] !== b[1]) return Infinity;              // 分数变了 → 期间发生了合成
+  let m = 0;
+  for (let k = 0; k < nb; k++) {
+    if (a[2 + k * 3] !== b[2 + k * 3]) return Infinity;   // 等级对不上 → 不是同一颗
+    const dx = Math.abs(a[3 + k * 3] - b[3 + k * 3]);
+    const dy = Math.abs(a[4 + k * 3] - b[4 + k * 3]);
+    const d = dx > dy ? dx : dy;
+    if (d > m) m = d;
+  }
+  return m;
+}
+
 /* 跑到 h 秒；盘面静下来（且已跑够 quiet）就提前收工 */
 export function runSettle(w, h, quiet, allowRevive = true) {
   const step = E.CFG.FIXED;
   const n = Math.round(h / step);
   const minSteps = quiet ? Math.round(quiet / step) : n;
+  const vib = SETTLE.vibrate;
+  let prevN = -1, frozen = 0;
+
   for (let i = 0; i < n; i++) {
     E.update(w, step);
     if (w.over) {
       /* 有币就花：推演里直接把复活做掉，继续往下跑。
          这样评估函数看到的是「用币之后的真实局面」，而不是一刀切判死 */
-      if (allowRevive && w.revives > 0 && E.revive(w)) continue;
+      if (allowRevive && w.revives > 0 && E.revive(w)) { prevN = -1; frozen = 0; continue; }
       return i + 1;
     }
-    if (i >= minSteps && (i & 3) === 0 && E.maxSpeed(w) < 25) return i + 1;
+    if (i < minSteps || (i & 3) !== 0) continue;
+
+    if (E.maxSpeed(w) < 25) return i + 1;          // 规则一：真的静止
+
+    if (vib && i % SETTLE.vibWindow === 0) {        // 规则二：整盘净位移
+      const nb = capturePose(w, poseCur);
+      if (nb < 0) continue;
+      if (nb === prevN && E.maxSpeed(w) < SETTLE.vibMaxSpeed) {
+        const shift = poseShift(poseCur, posePrev, nb);
+        if (shift < SETTLE.vibEps) {
+          frozen++;
+          if (frozen >= SETTLE.vibNeed) return i + 1;
+        } else frozen = 0;
+      } else frozen = 0;
+      posePrev.set(poseCur);                        // 滚动基线
+      prevN = nb;
+    }
   }
   return n;
 }
@@ -250,7 +380,7 @@ export function runSettle(w, h, quiet, allowRevive = true) {
 /* 推演一次投放 → 返回评估值 */
 export function rolloutValue(src, x, h, wt, scratch, quiet) {
   const sim = E.cloneWorld(src, scratch);
-  sim.mergedMaxTier = -1;
+  sim.mergedMaxTier = -1; sim.freed = 0;
   const before = sim.score;
   E.dropAt(sim, x);          // 若 !ready 会失败 → 调用方保证 ready
   runSettle(sim, h, quiet);
@@ -290,58 +420,146 @@ export function stageLong(world, opts, xs, ctx) {
   return out;
 }
 
-/* ③ 第二层：先用已知的下一颗水果做「连手棋」内层搜索，再把内层最优值带回来 */
-export function stagePly2(world, opts, xs, ctx) {
-  const st = stageCtx(world, opts, ctx);
-  const wt = st.wt;
+/* ③ 第二层（连手棋）：拆成三步，所有工作单元都能跨 Worker 并行 ------------
+ *   a. ply2Plan     ：展开「外层落点 × 颜色 × 内层落点」的全部工作单元（纯索引，无物理）
+ *   b. stageInner   ：单元 = 外层投放并稳定 → 内层颜色投放 → 跑 h1（可切片并行）
+ *      stageRecheck ：每个 (外层, 颜色) 的内层冠军再跑一次 h2 长推演（可切片并行）
+ *   c. ply2Best / ply2RecheckItems / ply2Assemble：取内层第一个最大值（与原来的
+ *      `v > bestInner` 完全一致），再按原来的顺序做加权求和
+ *  外层基准直接取精选阶段的 v2：二者是同一条推演（同盘面、同落点、同样的 h2 与 quiet），
+ *  原先 stagePly2 会把它再算一遍，纯属重复。与原实现逐位一致（tools/verify-exact.mjs 守着）。 */
+
+export function ply2Plan(world, opts, outerXs) {
+  const step = opts.step || 8;
   const known = opts.nextMode === 'known';
-  const pAvoid = spawnProb(world.pending);
-  const innerStep = known ? Math.max(4, st.step * 0.75) : Math.max(10, st.step * 1.5);
-  const innerH = known ? st.h1 : Math.min(st.h1, 1.0);
+  const h1 = opts.h1 ?? 1.2;
+  const innerStep = known ? Math.max(4, step * 0.75) : Math.max(10, step * 1.5);
+  const innerH = known ? h1 : Math.min(h1, 1.0);
   const tiers = known ? [world.next] : E.SPAWN_TIERS.filter(t => t !== world.pending);
-  const out = new Array(xs.length);
+  const items = [];
+  for (let o = 0; o < outerXs.length; o++) {
+    for (let ti = 0; ti < tiers.length; ti++) {
+      for (const x2 of candidateXs(tiers[ti], innerStep)) {
+        items.push({ o, x: outerXs[o], ti, t: tiers[ti], x2 });
+      }
+    }
+  }
+  return { known, innerH, h2: opts.h2 ?? 2.6, tiers, nOuter: outerXs.length, items };
+}
 
-  for (let i = 0; i < xs.length; i++) {
-    const x = xs[i];
-    /* 外层：投放后跑到稳定 */
-    const sim1 = E.cloneWorld(world, st.scratch);
-    sim1.mergedMaxTier = -1;
-    const base0 = sim1.score;
-    E.dropAt(sim1, x);
+/* 工作单元按「外层落点」连续排列，这里缓存当前外层的盘面与内层盘面，
+   同一外层、同一颜色只构造一次（构造过程与原来逐个构造完全相同） */
+/* 缓存结构：Map<外层落点x, {sim1, inners: Map<颜色t, inner>}>。
+   sim1 不能用 st.scratch（多份外层盘面要同时存活），这里每份都是独立的克隆。 */
+function innerOf(world, st, cache, it) {
+  let e = cache.get(it.x);
+  if (!e) {
+    const sim1 = E.cloneWorld(world);
+    sim1.mergedMaxTier = -1; sim1.freed = 0;
+    E.dropAt(sim1, it.x);
     runSettle(sim1, st.h2, st.quiet + 0.6);
-    const base = evaluate(sim1, base0, wt);
+    e = { sim1, inners: new Map() };
+    cache.set(it.x, e);
+  }
+  let inner = e.inners.get(it.t);
+  if (!inner) {
+    inner = E.cloneWorld(e.sim1, E.makeWorld({ rng: world.rng }));
+    inner.pending = it.t;
+    inner.ready = true;
+    inner.cooldown = 0;
+    e.inners.set(it.t, inner);
+  }
+  return inner;
+}
 
+export function stageInner(world, opts, items, ctx) {
+  const st = stageCtx(world, opts, ctx);
+  const innerH = opts.nextMode === 'known' ? st.h1 : Math.min(st.h1, 1.0);
+  /* 顺序版传入同一个 ctx.cache：复核阶段就能复用这里建好的外层/内层盘面 */
+  const cache = (ctx && ctx.cache) || new Map();
+  const out = new Array(items.length);
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const inner = innerOf(world, st, cache, it);
+    const s2 = E.cloneWorld(inner, E.makeWorld({ rng: world.rng }));
+    s2.mergedMaxTier = -1; s2.freed = 0;
+    const b2 = s2.score;
+    E.dropAt(s2, it.x2);
+    runSettle(s2, innerH, 0.7);
+    out[i] = evaluate(s2, b2, st.wt);
+  }
+  return out;
+}
+
+/* 内层冠军的长推演复核（连锁合成往往 1 秒后才发生） */
+export function stageRecheck(world, opts, items, ctx) {
+  const st = stageCtx(world, opts, ctx);
+  const cache = (ctx && ctx.cache) || new Map();
+  const out = new Array(items.length);
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const inner = innerOf(world, st, cache, it);
+    const s3 = E.cloneWorld(inner, E.makeWorld({ rng: world.rng }));
+    s3.mergedMaxTier = -1; s3.freed = 0;
+    const b3 = s3.score;
+    E.dropAt(s3, it.x2);
+    runSettle(s3, st.h2, 1.2);
+    out[i] = evaluate(s3, b3, st.wt);
+  }
+  return out;
+}
+
+/* 每个 (外层, 颜色) 的内层最优：取第一个最大值（与原来的 `v > bestInner` 一致） */
+export function ply2Best(plan, innerVals) {
+  const best = [];
+  for (let o = 0; o < plan.nOuter; o++) {
+    const row = [];
+    for (let ti = 0; ti < plan.tiers.length; ti++) row.push({ v: -Infinity, idx: -1 });
+    best.push(row);
+  }
+  for (let i = 0; i < plan.items.length; i++) {
+    const it = plan.items[i];
+    const cell = best[it.o][it.ti];
+    const v = innerVals[i];
+    if (v > cell.v) { cell.v = v; cell.idx = i; }
+  }
+  return best;
+}
+
+/* 需要长推演复核的内层冠军（只有 h2 比内层horizon长时才复核，与原来的条件一致） */
+export function ply2RecheckItems(plan, best) {
+  const out = [];
+  if (!(plan.h2 > plan.innerH)) return out;
+  for (let o = 0; o < plan.nOuter; o++) {
+    for (let ti = 0; ti < plan.tiers.length; ti++) {
+      const c = best[o][ti];
+      if (c.idx < 0) continue;
+      const it = plan.items[c.idx];
+      out.push({ o, ti, x: it.x, t: it.t, x2: it.x2 });
+    }
+  }
+  return out;
+}
+
+/* 汇总：每个外层落点的 v3（基准 = 精选阶段的 v2，见上面的说明） */
+export function ply2Assemble(world, plan, outerBase, best, rcItems, rcVals) {
+  const pAvoid = spawnProb(world.pending);
+  const rc = [];
+  for (let o = 0; o < plan.nOuter; o++) rc.push(new Array(plan.tiers.length).fill(undefined));
+  for (let k = 0; k < rcItems.length; k++) rc[rcItems[k].o][rcItems[k].ti] = rcVals[k];
+  const out = new Array(plan.nOuter);
+  for (let o = 0; o < plan.nOuter; o++) {
     let exp = 0, wsum = 0;
-    for (const t of tiers) {
-      const p = known ? 1 : SPAWN_W(t) / (1 - pAvoid);
-      const inner = E.cloneWorld(sim1, E.makeWorld({ rng: world.rng }));
-      inner.pending = t;
-      inner.ready = true;
-      inner.cooldown = 0;
-      let bestInner = -Infinity, bestX2 = null;
-      for (const x2 of candidateXs(t, innerStep)) {
-        const s2 = E.cloneWorld(inner, E.makeWorld({ rng: world.rng }));
-        s2.mergedMaxTier = -1;
-        const b2 = s2.score;
-        E.dropAt(s2, x2);
-        runSettle(s2, innerH, 0.7);
-        const v = evaluate(s2, b2, wt);
-        if (v > bestInner) { bestInner = v; bestX2 = x2; }
-      }
-      /* 内层冠军再用长推演复核一次（连锁合成往往 1 秒后才发生） */
-      if (bestX2 !== null && st.h2 > innerH) {
-        const s3 = E.cloneWorld(inner, E.makeWorld({ rng: world.rng }));
-        s3.mergedMaxTier = -1;
-        const b3 = s3.score;
-        E.dropAt(s3, bestX2);
-        runSettle(s3, st.h2, 1.2);
-        const v3 = evaluate(s3, b3, wt);
-        if (v3 > bestInner) bestInner = v3;
-      }
+    for (let ti = 0; ti < plan.tiers.length; ti++) {
+      const t = plan.tiers[ti];
+      const p = plan.known ? 1 : SPAWN_W(t) / (1 - pAvoid);
+      let bestInner = best[o][ti].v;
+      const v3 = rc[o][ti];
+      if (v3 !== undefined && v3 > bestInner) bestInner = v3;
       exp += p * bestInner;
       wsum += p;
     }
-    out[i] = { x, v3: base + (known ? 1.0 : 0.8) * (exp / (wsum || 1)) };
+    out[o] = outerBase[o] + (plan.known ? 1.0 : 0.8) * (exp / (wsum || 1));
   }
   return out;
 }
@@ -357,7 +575,9 @@ export function stageRefine(world, opts, xs, ctx) {
   return out;
 }
 
-export const STAGES = { screen: stageScreen, long: stageLong, ply2: stagePly2, refine: stageRefine };
+export const STAGES = {
+  screen: stageScreen, long: stageLong, inner: stageInner, recheck: stageRecheck, refine: stageRefine,
+};
 
 function stageCtx(world, opts, ctx) {
   const step = opts.step || 8;
@@ -402,8 +622,12 @@ export function searchBest(world, opts = {}) {
   const nTop = Math.min(opts.innerTop ?? 4, shortlist.length);
   if (lookahead >= 2 && shortlist.length > 1) {
     const top = shortlist.slice(0, nTop);
-    const p2 = stagePly2(world, opts, top.map(r => r.x));
-    for (let i = 0; i < top.length; i++) top[i].v3 = p2[i].v3;
+    const plan2 = ply2Plan(world, opts, top.map(r => r.x));
+    const ctx2 = { cache: new Map() };          // 顺序版：内层与复核共享外层/内层盘面
+    const best2 = ply2Best(plan2, stageInner(world, opts, plan2.items, ctx2));
+    const rcItems = ply2RecheckItems(plan2, best2);
+    const v3 = ply2Assemble(world, plan2, top.map(r => r.v2), best2, rcItems, stageRecheck(world, opts, rcItems, ctx2));
+    for (let i = 0; i < top.length; i++) top[i].v3 = v3[i];
     top.sort((a, b) => b.v3 - a.v3);
     best = top[0];
   }
@@ -457,8 +681,13 @@ export async function planParallel(world, opts, exec) {
   const nTop = Math.min(opts.innerTop ?? 4, shortlist.length);
   if (lookahead >= 2 && shortlist.length > 1) {
     const top = shortlist.slice(0, nTop);
-    const p2 = await exec('ply2', top.map(r => r.x));
-    for (let i = 0; i < top.length; i++) top[i].v3 = p2[i].v3;
+    const plan2 = ply2Plan(world, opts, top.map(r => r.x));
+    /* 工作单元是扁平的（外层 × 颜色 × 内层落点），切片后各 Worker 都能分到活 */
+    const best2 = ply2Best(plan2, await exec('inner', plan2.items));
+    const rcItems = ply2RecheckItems(plan2, best2);
+    const rcVals = rcItems.length ? await exec('recheck', rcItems) : [];
+    const v3 = ply2Assemble(world, plan2, top.map(r => r.v2), best2, rcItems, rcVals);
+    for (let i = 0; i < top.length; i++) top[i].v3 = v3[i];
     top.sort((a, b) => b.v3 - a.v3);
     best = top[0];
   }

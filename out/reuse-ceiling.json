@@ -1,0 +1,265 @@
+{
+  "opts": {
+    "step": 8,
+    "h1": 1.2,
+    "h2": 2.6,
+    "topK": 8,
+    "innerTop": 4,
+    "lookahead": 2,
+    "refine": true,
+    "nextMode": "known",
+    "quiet": 0.9,
+    "weights": {
+      "merge": 1,
+      "mergeW": 3,
+      "top": 2,
+      "above": 8,
+      "overT": 4,
+      "bump": 0,
+      "adj": 2.4,
+      "bigPair": 2.2,
+      "blocked": 0.9,
+      "mono": 0,
+      "bigHigh": 0.8,
+      "buried": 0.6,
+      "frag": 0.25,
+      "stuck": 0,
+      "space": 0,
+      "dead": -10000,
+      "riskScaleWithRevive": 0.45
+    }
+  },
+  "boards": [
+    {
+      "label": "mid（170 手随机）",
+      "balls": 18,
+      "score": 1450,
+      "usFrame": 70.47833333333331,
+      "rows": [
+        {
+          "key": "screen",
+          "name": "① 粗筛 screen",
+          "units": 46,
+          "ms": 207.64250000000004,
+          "frames": 2836,
+          "shareFrames": 16.036188860616342,
+          "shareMs": 16.03006890978393
+        },
+        {
+          "key": "long",
+          "name": "② 精选 long",
+          "units": 8,
+          "ms": 53.17780000000005,
+          "frames": 744,
+          "shareFrames": 4.206955046649703,
+          "shareMs": 4.105343551877427
+        },
+        {
+          "key": "inner",
+          "name": "③ 第二层 inner",
+          "units": 216,
+          "ms": 973.4282000000001,
+          "frames": 13265,
+          "shareFrames": 75.00706813683912,
+          "shareMs": 75.14897540111939
+        },
+        {
+          "key": "recheck",
+          "name": "④ 复核 recheck",
+          "units": 4,
+          "ms": 32.99160000000006,
+          "frames": 468,
+          "shareFrames": 2.6463104325699747,
+          "shareMs": 2.5469623099511347
+        },
+        {
+          "key": "refine",
+          "name": "⑤ 细化 refine",
+          "units": 4,
+          "ms": 28.091199999999844,
+          "frames": 372,
+          "shareFrames": 2.1034775233248517,
+          "shareMs": 2.168649827268116
+        }
+      ],
+      "totalFrames": 17685,
+      "totalMs": 1295.3313,
+      "pathFrames": 1655.0253623188405,
+      "probe": {
+        "xStar": 69.15299999999999,
+        "hits": 0,
+        "nEntries": 46,
+        "trajDiff": {
+          "n": 19,
+          "maxPos": 0,
+          "maxVel": 0,
+          "dScore": 0
+        },
+        "settledDiff": {
+          "n": 19,
+          "maxPos": 121.9878848172342,
+          "maxVel": 1083.3117652897442,
+          "dScore": 0
+        },
+        "nearest": {
+          "x": 36.9594,
+          "n": 19,
+          "maxPos": 113.93809817736428,
+          "maxVel": 1082.6725119568573,
+          "dScore": 0
+        }
+      },
+      "gridNow": 46,
+      "gridInner": 54,
+      "gridHits": 0,
+      "prefix": {
+        "screenNow": {
+          "ms": 217.9672999999998,
+          "frames": 2836
+        },
+        "longNow": {
+          "ms": 53.166999999999916,
+          "frames": 744
+        },
+        "screenKeep": {
+          "ms": 203.27250000000004,
+          "frames": 2836
+        },
+        "longResume": {
+          "ms": 19.416399999999612,
+          "frames": 269
+        },
+        "exactBits": true,
+        "sameShortlist": true,
+        "outerDup": {
+          "now": {
+            "ms": 27.467899999999645,
+            "frames": 372
+          },
+          "reuse": {
+            "ms": 0.10649999999986903,
+            "frames": 0
+          }
+        },
+        "saved": 847,
+        "savedShare": 4.789369522193949
+      }
+    },
+    {
+      "label": "dense（贪心堆到 26 颗）",
+      "balls": 26,
+      "score": 729,
+      "usFrame": 104.32379999999951,
+      "rows": [
+        {
+          "key": "screen",
+          "name": "① 粗筛 screen",
+          "units": 46,
+          "ms": 349.8827999999994,
+          "frames": 3284,
+          "shareFrames": 14.37073341501838,
+          "shareMs": 14.882156365856487
+        },
+        {
+          "key": "long",
+          "name": "② 精选 long",
+          "units": 8,
+          "ms": 126.62920000000031,
+          "frames": 1217,
+          "shareFrames": 5.325573253982146,
+          "shareMs": 5.386133742165439
+        },
+        {
+          "key": "inner",
+          "name": "③ 第二层 inner",
+          "units": 236,
+          "ms": 1774.8201000000008,
+          "frames": 17321,
+          "shareFrames": 75.79642919656922,
+          "shareMs": 75.49142241191937
+        },
+        {
+          "key": "recheck",
+          "name": "④ 复核 recheck",
+          "units": 4,
+          "ms": 52.15239999999994,
+          "frames": 558,
+          "shareFrames": 2.441799404866095,
+          "shareMs": 2.218286156549263
+        },
+        {
+          "key": "refine",
+          "name": "⑤ 细化 refine",
+          "units": 4,
+          "ms": 47.53770000000077,
+          "frames": 472,
+          "shareFrames": 2.065464729564152,
+          "shareMs": 2.0220013235094396
+        }
+      ],
+      "totalFrames": 22852,
+      "totalMs": 2351.0222000000012,
+      "pathFrames": 2163.071573323508,
+      "probe": {
+        "xStar": 383.0406,
+        "hits": 0,
+        "nEntries": 46,
+        "trajDiff": {
+          "n": 27,
+          "maxPos": 0,
+          "maxVel": 0,
+          "dScore": 0
+        },
+        "settledDiff": {
+          "n": 26,
+          "n2": 27,
+          "maxPos": null,
+          "maxVel": null,
+          "dScore": 1
+        },
+        "nearest": {
+          "x": 302.5566,
+          "n": 27,
+          "maxPos": 105.43126117346117,
+          "maxVel": 1081.0658619299625,
+          "dScore": 0
+        }
+      },
+      "gridNow": 46,
+      "gridInner": 59,
+      "gridHits": 0,
+      "prefix": {
+        "screenNow": {
+          "ms": 350.71570000000065,
+          "frames": 3284
+        },
+        "longNow": {
+          "ms": 129.04269999999997,
+          "frames": 1217
+        },
+        "screenKeep": {
+          "ms": 348.4302000000007,
+          "frames": 3284
+        },
+        "longResume": {
+          "ms": 67.54500000000007,
+          "frames": 641
+        },
+        "exactBits": true,
+        "sameShortlist": true,
+        "outerDup": {
+          "now": {
+            "ms": 61.560599999998885,
+            "frames": 593
+          },
+          "reuse": {
+            "ms": 0.06780000000071595,
+            "frames": 0
+          }
+        },
+        "saved": 1169,
+        "savedShare": 5.115525993348504
+      }
+    }
+  ]
+}

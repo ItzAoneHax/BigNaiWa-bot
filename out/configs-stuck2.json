@@ -1,0 +1,4 @@
+[
+  {"name": "base", "weights": {}},
+  {"name": "big200-600", "weights": {"stuck": 200, "space": 600}}
+]

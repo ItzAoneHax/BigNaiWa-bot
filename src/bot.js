@@ -32,7 +32,7 @@ const DEFAULTS = {
   verbose: false,
   hud: true,               // 灵动岛
   useWorker: true,
-  workers: 0,              // 推演用几个 Worker（0 = 自动：min(6, 核数-2)）
+  workers: 0,              // 推演用几个 Worker（0 = 自动：min(12, 核数-4)）
   think: {
     step: 8, h1: 1.2, h2: 2.6, topK: 8, lookahead: 2, refine: true,
     innerTop: 4,
@@ -161,7 +161,10 @@ export function createBot(userOpts = {}) {
     if (!opts.useWorker || typeof Worker === 'undefined' || typeof Blob === 'undefined') return false;
     if (typeof WORKER_SOURCE !== 'string') return false;
     const hw = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 4;
-    const want = opts.workers > 0 ? opts.workers : Math.max(1, Math.min(6, hw - 2));
+    /* 默认 min(12, 核数-4)。实测（tools/bench-workers.mjs，24 逻辑核）：
+       normal 档 6→8→12 个 Worker 的决策耗时 387→264→223 ms；deep 档 6→10→12 为 745→475→406 ms，
+       16 个反而回升（调度与消息开销），所以封顶 12；留 4 个核给页面与游戏本体。 */
+    const want = opts.workers > 0 ? opts.workers : Math.max(1, Math.min(12, hw - 4));
     try {
       const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: 'application/javascript' }));
       const shapes = window.SUIKA_PARTS || (window.NaiwaBot && window.NaiwaBot.EMBEDDED_SHAPES) || null;
@@ -439,10 +442,49 @@ export function createBot(userOpts = {}) {
     setTimeout(turboSlice, (bot.inflight || bot.paused) ? 8 : 0);
   }
 
-  /* 快进模式里我们自己跑物理（rAF 主循环被我们停了），
-     所以 AI 关掉以后也得接着跑，否则游戏会僵在那里 —— 这就是 passive 驱动 */
+  /* ------------------------------------------------------------- rAF ------
+   * 游戏自己的主循环是一串「自我续排」的 requestAnimationFrame：
+   *     function frame(now) { …update/render…; requestAnimationFrame(frame); }
+   * 快进（turbo）要接管页面时钟，做法就是把这个函数换成不排队的空函数
+   * —— 于是游戏的主循环在下一次回调之后就**断掉了**。
+   *
+   * 用户实测的 bug：从快进切回实时，只把 requestAnimationFrame 还原**不够**，
+   * 那条链已经断了 —— 冷却不再递减、水果不再下落、S.ready 永远是 false，
+   * 于是 bot 再也出不了手，看起来就是「切回实时直接卡死」。
+   * 现在的做法：
+   *   ① 劫持期间把所有排队的回调记下来（游戏主循环的下一环就在里面）；
+   *   ② 切回来时把它们重新排上，等于把链接回游戏自己手里；
+   *   ③ 万一一个都没记到（页面主循环本来就停着），退化成我们自己的等价主循环，
+   *      照样不会冻住。
+   * ------------------------------------------------------------------------ */
+  let ownLoop = false;              // 我们自己替游戏推帧
+
+  function hijackRaf() {
+    if (bot._rafDisabled) return;
+    bot._rafCaptured = [];
+    window.requestAnimationFrame = function (cb) {
+      if (typeof cb === 'function') bot._rafCaptured.push(cb);
+      return 0;
+    };
+    bot._rafDisabled = true;
+  }
+  /* 返回「接回了几个回调」；0 = 没得接 */
+  function unhijackRaf() {
+    if (!bot._rafDisabled) return 0;
+    window.requestAnimationFrame = bot._rafOrig;
+    bot._rafDisabled = false;
+    const pend = bot._rafCaptured || [];
+    bot._rafCaptured = [];
+    let resumed = 0;
+    for (const cb of pend) { try { bot._rafOrig(cb); resumed++; } catch (e) { } }
+    if (resumed) say('已把游戏自己的主循环接回（' + resumed + ' 个回调）');
+    else startOwnLoop();
+    return resumed;
+  }
+
+  /* 等价主循环：和 game.js 的 frame() 一样按墙钟累加、固定步长推物理 */
   function passiveFrame(t) {
-    if (!bot.running || bot.driverMode !== 'passive') return;
+    if (!bot.running || !ownLoop) return;
     if (!last) last = t;
     let dt = (t - last) / 1000;
     last = t;
@@ -454,17 +496,28 @@ export function createBot(userOpts = {}) {
     bot.DNW.render(dt);
     bot._raf = bot._rafOrig(passiveFrame);
   }
+  function startOwnLoop() {
+    if (ownLoop || !bot.running) return;
+    if (!bot._rafOrig) bot._rafOrig = window.requestAnimationFrame.bind(window);
+    ownLoop = true; last = 0; acc = 0;
+    bot._raf = bot._rafOrig(passiveFrame);
+    say('页面主循环没在跑 → 由 bot 用等价主循环接管推帧');
+  }
+  function stopOwnLoop() {
+    ownLoop = false;
+    if (bot._raf != null && typeof cancelAnimationFrame === 'function') { try { cancelAnimationFrame(bot._raf); } catch (e) { } }
+    bot._raf = null;
+  }
 
   function startDriver(mode) {
     bot.driverMode = mode;
     last = 0; acc = 0;
     if (mode === 'turbo') setTimeout(turboSlice, 30);
-    else if (mode === 'passive') bot._raf = bot._rafOrig(passiveFrame);
+    else if (mode === 'passive') startOwnLoop();
     else bot._timer = setInterval(realtimeTick, 30);
   }
   function stopDriver() {
     if (bot._timer) { clearInterval(bot._timer); bot._timer = null; }
-    bot._raf = null;
     bot.driverMode = null;
   }
 
@@ -508,9 +561,15 @@ export function createBot(userOpts = {}) {
     if (bot.running) {
       stopDriver();
       if (m === 'turbo') {
-        if (!bot._rafDisabled) { window.requestAnimationFrame = function () { return 0; }; bot._rafDisabled = true; }
-      } else if (bot._rafDisabled) {
-        window.requestAnimationFrame = bot._rafOrig; bot._rafDisabled = false;
+        stopOwnLoop();               // 快进由 bot 自己推帧，别两边一起推
+        hijackRaf();
+      } else if (m === 'passive') {
+        if (bot._rafDisabled) unhijackRaf();
+        startOwnLoop();
+      } else {
+        /* 实时：必须把游戏自己的主循环接回来（用户报的「切回实时卡死」就在这一步），
+           接不回来时 unhijackRaf() 内部会退化成我们自己推帧，同样不会冻住 */
+        unhijackRaf();
       }
       startDriver(m);
     }
@@ -550,10 +609,7 @@ export function createBot(userOpts = {}) {
     if (!bot._rafOrig) bot._rafOrig = window.requestAnimationFrame.bind(window);
     /* 只有快进模式才接管页面时钟（让原版主循环自然停掉，否则一帧会走两遍物理）；
        实时模式完全不碰它 —— 页面上的其它脚本照常跑。 */
-    if (opts.mode === 'turbo') {
-      bot._rafDisabled = true;
-      window.requestAnimationFrame = function () { return 0; };
-    }
+    if (opts.mode === 'turbo') hijackRaf();
 
     bot.running = true;
     bot.aiEnabled = true;
@@ -583,8 +639,9 @@ export function createBot(userOpts = {}) {
        否则游戏会永远冻住。实时模式则什么都不用做（游戏本来就是自己在跑）。 */
     if (bot.running && bot.driverMode === 'turbo') {
       stopDriver();
-      if (bot._rafDisabled) { window.requestAnimationFrame = bot._rafOrig; bot._rafDisabled = false; }
-      startDriver('passive');
+      /* 把游戏自己的主循环接回去；接不回来（本来就停着）才用等价主循环自己推帧 */
+      if (unhijackRaf() === 0) startDriver('passive');
+      else startDriver('realtime');
     } else if (bot.running) {
       stopDriver();
       startDriver('realtime');

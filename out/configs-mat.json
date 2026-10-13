@@ -1,0 +1,4 @@
+[
+  {"name": "base", "weights": {}},
+  {"name": "mat1", "weights": {"mat": 1.0}}
+]

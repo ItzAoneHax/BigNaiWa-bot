@@ -21,6 +21,16 @@ window.__VERIFY__ = function verify(opts) {
   const ORIG_RAF = window.requestAnimationFrame;
   window.requestAnimationFrame = function () { return 0; };
 
+  /* 时钟也必须独占：游戏的 landed 判定（performance.now() - bornAt > 900）用的是墙钟，
+     而移植端用的是虚拟时钟 w.now。手动步进时墙钟流逝快慢不定（第一轮 JIT 未热时尤其明显），
+     两边的 landed 会在不同的帧翻转，进而让判负时机分叉 —— 这不是物理本身的差异。
+     解决办法：校验期间把 performance.now() 换成与物理步进同步推进的虚拟时钟，
+     推进量与移植端 update() 里的 w.now += dt*1000 完全相同（都是 FIXED*1000）。 */
+  const REAL_NOW = performance.now.bind(performance);
+  let vt = 0;
+  Object.defineProperty(performance, 'now', { value: () => vt, configurable: true });
+  const tick = () => { vt += CFG.FIXED * 1000; };
+
   /* --- 落点序列（可复现） --- */
   const rnd = (() => { let a = 12345; return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; })();
   const xs = [];
@@ -33,9 +43,11 @@ window.__VERIFY__ = function verify(opts) {
   }
 
   /* ---------------- 第 1 程：真实游戏 ---------------- */
+  vt = 0;
   DNW.reset();
   const rec = { snaps: [], tiers: [], nexts: [], score: 0, drops: 0 };
   for (let f = 0; f < o.frames; f++) {
+    tick();
     DNW.update(CFG.FIXED);
     if (f > 0 && f % o.dropEvery === 0 && !DNW.state.over && DNW.state.ready) {
       rec.tiers.push(DNW.state.pending);
@@ -50,12 +62,14 @@ window.__VERIFY__ = function verify(opts) {
   rec.balls = DNW.state.balls.filter(b => !b.dead).length;
 
   /* ---------------- 第 2 程：移植引擎 ---------------- */
+  vt = 0;
   DNW.reset();
   const w = E.makeWorld({ rng: Math.random });
-  E.adoptFromGame(w, DNW.state, window.SUIKA_PARTS);
+  E.adoptFromGame(w, DNW.state, window.SUIKA_PARTS);   // 此时 performance.now() = 0，w.now 从 0 起步
   const rep = { snaps: [], score: 0, drops: 0 };
   let k = 0;
   for (let f = 0; f < o.frames; f++) {
+    tick();
     E.update(w, CFG.FIXED);
     if (f > 0 && f % o.dropEvery === 0 && !w.over && w.ready) {
       w.pending = rec.tiers[k];
@@ -84,6 +98,7 @@ window.__VERIFY__ = function verify(opts) {
   }
 
   window.requestAnimationFrame = ORIG_RAF;
+  Object.defineProperty(performance, 'now', { value: REAL_NOW, configurable: true });
 
   return {
     frames: o.frames, drops: rec.drops,

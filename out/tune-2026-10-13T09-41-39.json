@@ -1,0 +1,366 @@
+{
+  "plannerOpts": {
+    "step": 8,
+    "h1": 1.2,
+    "h2": 2.6,
+    "topK": 8,
+    "lookahead": 2,
+    "nextMode": "known"
+  },
+  "seeds": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004,
+    5005,
+    5006,
+    5007
+  ],
+  "rows": [
+    {
+      "name": "mid20-60",
+      "n": 8,
+      "avg": 1746.75,
+      "median": 1759,
+      "min": 1674,
+      "max": 1816,
+      "wall": 126.556,
+      "sqrtAvg": 1747.3823279408546,
+      "results": [
+        {
+          "seed": 5000,
+          "score": 1702,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 550.0726585000001,
+          "over": false
+        },
+        {
+          "seed": 5001,
+          "score": 1807,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 623.5712199999997,
+          "over": false
+        },
+        {
+          "seed": 5002,
+          "score": 1759,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 473.21312200000034,
+          "over": false
+        },
+        {
+          "seed": 5003,
+          "score": 1816,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 414.2911399999998,
+          "over": false
+        },
+        {
+          "seed": 5004,
+          "score": 1771,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 605.739912,
+          "over": false
+        },
+        {
+          "seed": 5005,
+          "score": 1674,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 465.8546810000002,
+          "over": false
+        },
+        {
+          "seed": 5006,
+          "score": 1727,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 629.4611970000004,
+          "over": false
+        },
+        {
+          "seed": 5007,
+          "score": 1718,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 429.103193,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "strong50-150",
+      "n": 8,
+      "avg": 1737.375,
+      "median": 1761,
+      "min": 1632,
+      "max": 1813,
+      "wall": 138.919,
+      "sqrtAvg": 1738.473791864577,
+      "results": [
+        {
+          "seed": 5000,
+          "score": 1632,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 622.1995099999997,
+          "over": false
+        },
+        {
+          "seed": 5001,
+          "score": 1812,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 652.4452875000004,
+          "over": false
+        },
+        {
+          "seed": 5002,
+          "score": 1761,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 609.3178485000002,
+          "over": false
+        },
+        {
+          "seed": 5003,
+          "score": 1813,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 442.7564354999998,
+          "over": false
+        },
+        {
+          "seed": 5004,
+          "score": 1689,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 381.83402250000023,
+          "over": false
+        },
+        {
+          "seed": 5005,
+          "score": 1779,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 497.1339980000005,
+          "over": false
+        },
+        {
+          "seed": 5006,
+          "score": 1735,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 611.2044319999999,
+          "over": false
+        },
+        {
+          "seed": 5007,
+          "score": 1678,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 691.0902080000001,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "base",
+      "n": 8,
+      "avg": 1673.625,
+      "median": 1747,
+      "min": 1026,
+      "max": 1825,
+      "wall": 148.605,
+      "sqrtAvg": 1691.8290028841568,
+      "results": [
+        {
+          "seed": 5000,
+          "score": 1747,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 513.3939929999998,
+          "over": false
+        },
+        {
+          "seed": 5001,
+          "score": 1746,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 571.9004634999999,
+          "over": false
+        },
+        {
+          "seed": 5002,
+          "score": 1734,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 698.9348844999997,
+          "over": false
+        },
+        {
+          "seed": 5003,
+          "score": 1801,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 445.24462600000004,
+          "over": false
+        },
+        {
+          "seed": 5004,
+          "score": 1825,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 516.5367309999998,
+          "over": false
+        },
+        {
+          "seed": 5005,
+          "score": 1710,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 492.5333999999999,
+          "over": false
+        },
+        {
+          "seed": 5006,
+          "score": 1800,
+          "drops": 200,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 739.5272935,
+          "over": false
+        },
+        {
+          "seed": 5007,
+          "score": 1026,
+          "drops": 122,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 482.9463475409837,
+          "over": false
+        }
+      ]
+    }
+  ],
+  "configs": [
+    {
+      "name": "base",
+      "weights": {}
+    },
+    {
+      "name": "mid20-60",
+      "weights": {
+        "stuck": 20,
+        "space": 60
+      }
+    },
+    {
+      "name": "strong50-150",
+      "weights": {
+        "stuck": 50,
+        "space": 150
+      }
+    }
+  ]
+}

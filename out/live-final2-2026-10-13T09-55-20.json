@@ -1,0 +1,39 @@
+{
+  "base": "http://127.0.0.1:11291/",
+  "mode": "turbo",
+  "think": {},
+  "stats": {
+    "games": [],
+    "drops": 343,
+    "planMs": 87608.5000000028,
+    "planN": 343,
+    "lastPlanMs": 768,
+    "lastCand": 40,
+    "lastValue": -667.4308608898866,
+    "simFrames": 7884,
+    "maxTier": 10,
+    "revivesUsed": 1,
+    "blockedSubmits": 0,
+    "revivesLeft": 0,
+    "bestScore": 2973,
+    "startedAt": 1791885230016,
+    "elapsed": 90.638,
+    "status": "stopped",
+    "error": null,
+    "workerReady": true,
+    "usingWorker": true,
+    "workerCount": 12,
+    "choices": {
+      "now": 343,
+      "settle": 0,
+      "quiet": 0
+    },
+    "gameStart": {
+      "drop": 0,
+      "plan": 0,
+      "planN": 0,
+      "revive": 0
+    }
+  },
+  "shots": []
+}

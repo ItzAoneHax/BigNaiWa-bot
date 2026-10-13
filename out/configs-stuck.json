@@ -1,0 +1,5 @@
+[
+  {"name": "base", "weights": {}},
+  {"name": "mid20-60", "weights": {"stuck": 20, "space": 60}},
+  {"name": "strong50-150", "weights": {"stuck": 50, "space": 150}}
+]
