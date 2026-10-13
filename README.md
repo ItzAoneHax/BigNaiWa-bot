@@ -1,3 +1,5 @@
+> 由于本人觉得这一堆奶蛙太神圣太可爱了于是使用DeepSeek V4.1 Flash花费了1¥的额度完成了这个脚本
+
 # 合成大奶娃 · AI 自动打（BigNaiWa Bot）
 
 给 [合成大奶娃 v1](https://yhsome.github.io/BigNaiWa/v1/) 写的一个自动打手：
