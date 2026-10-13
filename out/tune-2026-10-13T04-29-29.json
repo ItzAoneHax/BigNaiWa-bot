@@ -1,0 +1,301 @@
+{
+  "plannerOpts": {
+    "step": 14,
+    "h1": 0.7,
+    "h2": 1.4,
+    "topK": 3,
+    "lookahead": 1
+  },
+  "seeds": [
+    7700,
+    7701,
+    7702,
+    7703,
+    7704,
+    7705,
+    7706,
+    7707,
+    7708,
+    7709
+  ],
+  "rows": [
+    {
+      "name": "新(大果特征开)",
+      "n": 10,
+      "avg": 1997.4,
+      "median": 2137,
+      "min": 901,
+      "max": 2551,
+      "wall": 351.238,
+      "sqrtAvg": 2045.7191889406522,
+      "results": [
+        {
+          "seed": 7700,
+          "score": 2137,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 626.1871307692309,
+          "over": false
+        },
+        {
+          "seed": 7708,
+          "score": 2220,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 695.6744488461538,
+          "over": false
+        },
+        {
+          "seed": 7701,
+          "score": 2095,
+          "drops": 251,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 653.4506338645417,
+          "over": false
+        },
+        {
+          "seed": 7709,
+          "score": 901,
+          "drops": 126,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 273.23729126983983,
+          "over": false
+        },
+        {
+          "seed": 7702,
+          "score": 2551,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 10,
+          "maxTierName": "神奶蛙",
+          "planMsAvg": 633.0054100000003,
+          "over": false
+        },
+        {
+          "seed": 7703,
+          "score": 2202,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 957.7059488461537,
+          "over": false
+        },
+        {
+          "seed": 7704,
+          "score": 1774,
+          "drops": 232,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 6,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 869.5370918103458,
+          "over": true
+        },
+        {
+          "seed": 7705,
+          "score": 2073,
+          "drops": 260,
+          "revives": 1,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 843.2296492307689,
+          "over": false
+        },
+        {
+          "seed": 7706,
+          "score": 1644,
+          "drops": 192,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 508.4846697916667,
+          "over": false
+        },
+        {
+          "seed": 7707,
+          "score": 2377,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 831.3715592307695,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "旧(大果特征关)",
+      "n": 10,
+      "avg": 1750.5,
+      "median": 2075,
+      "min": 724,
+      "max": 2435,
+      "wall": 215.42,
+      "sqrtAvg": 1845.425614865037,
+      "results": [
+        {
+          "seed": 7700,
+          "score": 2216,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 507.49141576923085,
+          "over": false
+        },
+        {
+          "seed": 7708,
+          "score": 2118,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 301.0817823076921,
+          "over": false
+        },
+        {
+          "seed": 7701,
+          "score": 724,
+          "drops": 93,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 242.4562365591398,
+          "over": false
+        },
+        {
+          "seed": 7709,
+          "score": 2002,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 683.5526492307699,
+          "over": false
+        },
+        {
+          "seed": 7702,
+          "score": 1615,
+          "drops": 214,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 687.9485785046734,
+          "over": true
+        },
+        {
+          "seed": 7703,
+          "score": 2275,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 543.5533265384615,
+          "over": false
+        },
+        {
+          "seed": 7704,
+          "score": 2435,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 10,
+          "maxTierName": "神奶蛙",
+          "planMsAvg": 588.5182892307695,
+          "over": false
+        },
+        {
+          "seed": 7705,
+          "score": 929,
+          "drops": 113,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 234.0172902654868,
+          "over": false
+        },
+        {
+          "seed": 7706,
+          "score": 2075,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 664.3065784615383,
+          "over": false
+        },
+        {
+          "seed": 7707,
+          "score": 1116,
+          "drops": 153,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 362.94801503267973,
+          "over": false
+        }
+      ]
+    }
+  ],
+  "configs": [
+    {
+      "name": "旧(大果特征关)",
+      "weights": {
+        "bigPair": 0,
+        "blocked": 0,
+        "riskScaleWithRevive": 1
+      }
+    },
+    {
+      "name": "新(大果特征开)",
+      "weights": {}
+    }
+  ]
+}

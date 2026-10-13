@@ -1,0 +1,16 @@
+# 依赖
+node_modules/
+
+# 游戏本体离线副本（site/）：上游 YHSome/BigNaiWa 未声明 license，本仓库不再分发。
+# 需要本地跑分 / 引擎对拍时，把上游仓库的文件放进 site/（目录结构与线上一致），
+# 之后 tools/live.mjs、tools/verify-engine.mjs 即可照常使用。
+site/
+
+# 跑分脚本留下的 Worker 临时文件（内容都是空 JSON）
+out/.w-*.json
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

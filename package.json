@@ -1,0 +1,16 @@
+{
+  "name": "bignaiwa-bot",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "AI autoplay bot & solver for 合成大奶娃 (Suika-like)",
+  "scripts": {
+    "build": "node build.mjs",
+    "selfplay": "node tools/selfplay.mjs",
+    "verify": "node tools/verify-engine.mjs",
+    "live": "node tools/run-live.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.13.0"
+  }
+}

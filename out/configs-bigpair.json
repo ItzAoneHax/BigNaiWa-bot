@@ -1,0 +1,5 @@
+[
+  {"name":"旧(新特征关掉)","weights":{"bigPair":0,"blocked":0,"riskScaleWithRevive":1}},
+  {"name":"新(默认)","weights":{}},
+  {"name":"更激进用币","weights":{"riskScaleWithRevive":0.15}}
+]

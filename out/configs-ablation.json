@@ -1,0 +1,10 @@
+[
+  {"name":"base",        "weights":{}},
+  {"name":"noBuried",    "weights":{"buried":0}},
+  {"name":"noAdj",       "weights":{"adj":0}},
+  {"name":"noBump",      "weights":{"bump":0}},
+  {"name":"strongTop",   "weights":{"top":4}},
+  {"name":"strongAdj",   "weights":{"adj":2.4}},
+  {"name":"greedy",      "weights":{"adj":0,"buried":0,"bump":0,"bigHigh":0,"frag":0,"mergeW":0}},
+  {"name":"mergeHeavy",  "weights":{"merge":2,"mergeW":6}}
+]

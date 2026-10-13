@@ -1,0 +1,21 @@
+并行调参：8 个配置 × 10 局，worker=8，planner={"step":10,"h1":0.9,"h2":1.8,"topK":4,"lookahead":1}
+跑 base ... avg=1114.3 max=1290 (170s)
+跑 noBuried ... avg=1177.4 max=1248 (138s)
+跑 noAdj ... avg=1144.9 max=1280 (136s)
+跑 noBump ... avg=1236.8 max=1311 (95s)
+跑 strongTop ... avg=1097.4 max=1290 (163s)
+跑 strongAdj ... avg=1187.8 max=1308 (177s)
+跑 greedy ... avg=1172.9 max=1299 (177s)
+跑 mergeHeavy ... avg=1129.8 max=1223 (158s)
+
+配置                          n       平均      中位      最低      最高       耗时
+noBump                      10   1236.8    1244    1121    1311      95s
+strongAdj                   10   1187.8    1234    1037    1308     177s
+noBuried                    10   1177.4    1192    1101    1248     138s
+greedy                      10   1172.9    1215    1028    1299     177s
+noAdj                       10   1144.9    1153    1023    1280     136s
+mergeHeavy                  10   1129.8    1193     872    1223     158s
+base                        10   1114.3    1198     681    1290     170s
+strongTop                   10   1097.4    1119     681    1290     163s
+
+结果已写入 C:\Users\limin\Documents\deepseek-harness\default-workspace\BigNaiWa-bot\out\tune-2026-10-12T17-21-47.json

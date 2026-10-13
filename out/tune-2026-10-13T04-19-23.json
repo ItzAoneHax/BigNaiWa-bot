@@ -1,0 +1,366 @@
+{
+  "plannerOpts": {
+    "step": 12,
+    "h1": 0.8,
+    "h2": 1.6,
+    "topK": 4,
+    "lookahead": 2,
+    "nextMode": "known"
+  },
+  "seeds": [
+    7300,
+    7301,
+    7302,
+    7303,
+    7304,
+    7305,
+    7306,
+    7307
+  ],
+  "rows": [
+    {
+      "name": "旧(新特征关掉)",
+      "n": 8,
+      "avg": 1051.75,
+      "median": 1073,
+      "min": 960,
+      "max": 1116,
+      "wall": 200.072,
+      "sqrtAvg": 1052.8950564989846,
+      "results": [
+        {
+          "seed": 7300,
+          "score": 960,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1478.3538525,
+          "over": false
+        },
+        {
+          "seed": 7301,
+          "score": 1058,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1304.3337983333336,
+          "over": false
+        },
+        {
+          "seed": 7302,
+          "score": 1077,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1657.9905866666666,
+          "over": false
+        },
+        {
+          "seed": 7303,
+          "score": 1051,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1479.5654,
+          "over": false
+        },
+        {
+          "seed": 7304,
+          "score": 1091,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1105.814566666667,
+          "over": false
+        },
+        {
+          "seed": 7305,
+          "score": 1073,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1193.8624683333328,
+          "over": false
+        },
+        {
+          "seed": 7306,
+          "score": 988,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1420.5712583333332,
+          "over": false
+        },
+        {
+          "seed": 7307,
+          "score": 1116,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1165.1948200000004,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "新(默认)",
+      "n": 8,
+      "avg": 999.875,
+      "median": 1007,
+      "min": 939,
+      "max": 1071,
+      "wall": 240.038,
+      "sqrtAvg": 1000.7131831848724,
+      "results": [
+        {
+          "seed": 7300,
+          "score": 1071,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1163.088399166667,
+          "over": false
+        },
+        {
+          "seed": 7301,
+          "score": 995,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1517.9347183333339,
+          "over": false
+        },
+        {
+          "seed": 7302,
+          "score": 1013,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1990.4056824999998,
+          "over": false
+        },
+        {
+          "seed": 7303,
+          "score": 975,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1636.5615958333333,
+          "over": false
+        },
+        {
+          "seed": 7304,
+          "score": 956,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1352.3380183333334,
+          "over": false
+        },
+        {
+          "seed": 7305,
+          "score": 1007,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1836.471158333333,
+          "over": false
+        },
+        {
+          "seed": 7306,
+          "score": 939,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1294.5972716666668,
+          "over": false
+        },
+        {
+          "seed": 7307,
+          "score": 1043,
+          "drops": 118,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1269.5490720338978,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "更激进用币",
+      "n": 8,
+      "avg": 999.875,
+      "median": 1007,
+      "min": 939,
+      "max": 1071,
+      "wall": 241.663,
+      "sqrtAvg": 1000.7131831848724,
+      "results": [
+        {
+          "seed": 7300,
+          "score": 1071,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 1219.8459733333339,
+          "over": false
+        },
+        {
+          "seed": 7301,
+          "score": 995,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1602.307545,
+          "over": false
+        },
+        {
+          "seed": 7302,
+          "score": 1013,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 2003.6963441666674,
+          "over": false
+        },
+        {
+          "seed": 7303,
+          "score": 975,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1685.6017774999996,
+          "over": false
+        },
+        {
+          "seed": 7304,
+          "score": 956,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1316.443920833333,
+          "over": false
+        },
+        {
+          "seed": 7305,
+          "score": 1007,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1840.0756025000017,
+          "over": false
+        },
+        {
+          "seed": 7306,
+          "score": 939,
+          "drops": 120,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1356.0191024999995,
+          "over": false
+        },
+        {
+          "seed": 7307,
+          "score": 1043,
+          "drops": 118,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 1308.5996999999995,
+          "over": false
+        }
+      ]
+    }
+  ],
+  "configs": [
+    {
+      "name": "旧(新特征关掉)",
+      "weights": {
+        "bigPair": 0,
+        "blocked": 0,
+        "riskScaleWithRevive": 1
+      }
+    },
+    {
+      "name": "新(默认)",
+      "weights": {}
+    },
+    {
+      "name": "更激进用币",
+      "weights": {
+        "riskScaleWithRevive": 0.15
+      }
+    }
+  ]
+}

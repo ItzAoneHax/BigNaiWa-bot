@@ -1,0 +1,44 @@
+{
+  "base": "https://yhsome.github.io/BigNaiWa/v1/",
+  "mode": "realtime",
+  "think": {
+    "step": 8,
+    "h1": 1.2,
+    "h2": 2.6,
+    "topK": 8,
+    "lookahead": 2,
+    "nextMode": "known",
+    "weights": {
+      "bump": 0
+    }
+  },
+  "stats": {
+    "games": [],
+    "lastScore": 0,
+    "score": 0,
+    "drops": 102,
+    "planMs": 49290.50000002235,
+    "planN": 102,
+    "maxTier": 8,
+    "revivesUsed": 0,
+    "blockedSubmits": 0,
+    "simFrames": 0,
+    "startedAt": 1791826989588,
+    "elapsed": 150.868,
+    "status": "timeout",
+    "error": null,
+    "gameStart": {
+      "drop": 0,
+      "plan": 0,
+      "planN": 0,
+      "tier": 0,
+      "revive": 0
+    },
+    "lastPlanMs": 970
+  },
+  "shots": [
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\snap-livedemo2-0040s.png",
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\snap-livedemo2-0080s.png",
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\snap-livedemo2-0121s.png"
+  ]
+}

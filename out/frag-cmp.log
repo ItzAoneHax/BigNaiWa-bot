@@ -1,0 +1,11 @@
+并行调参：3 个配置 × 8 局，worker=8，planner={"step":14,"h1":0.7,"h2":1.4,"topK":3,"lookahead":1}
+跑 碎果惩罚 原样 ... avg=1915.4 max=2511 (189s)
+跑 碎果惩罚 x4 ... avg=1904.8 max=2509 (188s)
+跑 碎果惩罚 x8 ... avg=1886.0 max=2200 (183s)
+
+配置                          n       平均      中位      最低      最高       耗时
+碎果惩罚 原样                      8   1915.4    2101    1140    2511     189s
+碎果惩罚 x4                      8   1904.8    1987    1140    2509     188s
+碎果惩罚 x8                      8   1886.0    2066    1140    2200     183s
+
+结果已写入 C:\Users\limin\Documents\deepseek-harness\default-workspace\BigNaiWa-bot\out\tune-2026-10-13T04-41-27.json

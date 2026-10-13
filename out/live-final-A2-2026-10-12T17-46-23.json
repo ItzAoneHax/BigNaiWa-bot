@@ -1,0 +1,53 @@
+{
+  "base": "http://127.0.0.1:14491/",
+  "mode": "turbo",
+  "think": {
+    "step": 8,
+    "h1": 1.2,
+    "h2": 2.6,
+    "topK": 8,
+    "lookahead": 2,
+    "nextMode": "known",
+    "weights": {
+      "bump": 0,
+      "adj": 2.4
+    }
+  },
+  "stats": {
+    "games": [
+      {
+        "score": 4357,
+        "drops": 485,
+        "maxTier": 10,
+        "revivesUsed": 2,
+        "planMsAvg": 1916.9212371134035,
+        "reason": "game-over"
+      }
+    ],
+    "lastScore": 4357,
+    "score": 0,
+    "drops": 485,
+    "planMs": 929706.8000000007,
+    "planN": 485,
+    "maxTier": 10,
+    "revivesUsed": 2,
+    "blockedSubmits": 0,
+    "simFrames": 25405,
+    "startedAt": 1791826236134,
+    "elapsed": 946.122,
+    "status": "done",
+    "error": null,
+    "gameStart": {
+      "drop": 0,
+      "plan": 0,
+      "planN": 0,
+      "tier": 0,
+      "revive": 0
+    },
+    "lastPlanMs": 395
+  },
+  "shots": [
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\shot-final-A2-game1.png",
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\shot-final-A2-final.png"
+  ]
+}

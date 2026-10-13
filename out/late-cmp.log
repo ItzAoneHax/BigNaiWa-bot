@@ -1,0 +1,9 @@
+并行调参：2 个配置 × 10 局，worker=8，planner={"step":14,"h1":0.7,"h2":1.4,"topK":3,"lookahead":1}
+跑 旧(大果特征关) ... avg=1750.5 max=2435 (215s)
+跑 新(大果特征开) ... avg=1997.4 max=2551 (351s)
+
+配置                          n       平均      中位      最低      最高       耗时
+新(大果特征开)                    10   1997.4    2137     901    2551     351s
+旧(大果特征关)                    10   1750.5    2075     724    2435     215s
+
+结果已写入 C:\Users\limin\Documents\deepseek-harness\default-workspace\BigNaiWa-bot\out\tune-2026-10-13T04-29-29.json

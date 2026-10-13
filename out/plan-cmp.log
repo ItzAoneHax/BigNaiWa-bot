@@ -1,0 +1,2 @@
+并行调参：5 个配置 × 12 局，worker=6，planner={"h1":1,"h2":2,"topK":6}
+跑 la1-control ... avg=1286.3 max=1448 (318s)

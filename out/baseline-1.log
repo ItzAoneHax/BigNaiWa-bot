@@ -1,0 +1,1 @@
+并行调参：1 个配置 × 10 局，worker=10，planner={"step":8,"h1":0.9,"h2":2,"topK":5,"lookahead":1}

@@ -1,0 +1,23 @@
+{
+  "base": "http://127.0.0.1:4104/",
+  "mode": "turbo",
+  "think": {},
+  "stats": {
+    "games": [],
+    "lastScore": 0,
+    "score": 0,
+    "drops": 62,
+    "planMs": 62814.10000000056,
+    "planN": 62,
+    "maxTier": 7,
+    "revivesUsed": 0,
+    "blockedSubmits": 0,
+    "simFrames": 4061,
+    "startedAt": 1791824075468,
+    "elapsed": 63.686,
+    "status": "timeout",
+    "error": null,
+    "lastPlanMs": 1692
+  },
+  "shots": []
+}

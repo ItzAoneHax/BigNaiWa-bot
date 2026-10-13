@@ -1,0 +1,363 @@
+{
+  "plannerOpts": {
+    "step": 14,
+    "h1": 0.7,
+    "h2": 1.4,
+    "topK": 3,
+    "lookahead": 1
+  },
+  "seeds": [
+    7900,
+    7901,
+    7902,
+    7903,
+    7904,
+    7905,
+    7906,
+    7907
+  ],
+  "rows": [
+    {
+      "name": "碎果惩罚 原样",
+      "n": 8,
+      "avg": 1915.375,
+      "median": 2101,
+      "min": 1140,
+      "max": 2511,
+      "wall": 188.898,
+      "sqrtAvg": 1953.4004005835568,
+      "results": [
+        {
+          "seed": 7900,
+          "score": 1686,
+          "drops": 184,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 368.8976625,
+          "over": false
+        },
+        {
+          "seed": 7901,
+          "score": 1140,
+          "drops": 124,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 207.49666451612887,
+          "over": false
+        },
+        {
+          "seed": 7902,
+          "score": 2101,
+          "drops": 255,
+          "revives": 1,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 672.1549658823527,
+          "over": true
+        },
+        {
+          "seed": 7903,
+          "score": 2160,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 528.9001976923073,
+          "over": false
+        },
+        {
+          "seed": 7904,
+          "score": 1721,
+          "drops": 204,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 479.7802411764703,
+          "over": false
+        },
+        {
+          "seed": 7905,
+          "score": 2105,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 561.91195,
+          "over": false
+        },
+        {
+          "seed": 7906,
+          "score": 1899,
+          "drops": 235,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 712.1075727659579,
+          "over": true
+        },
+        {
+          "seed": 7907,
+          "score": 2511,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 10,
+          "maxTierName": "神奶蛙",
+          "planMsAvg": 709.2353500000005,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "碎果惩罚 x4",
+      "n": 8,
+      "avg": 1904.75,
+      "median": 1987,
+      "min": 1140,
+      "max": 2509,
+      "wall": 188.415,
+      "sqrtAvg": 1945.1467168314066,
+      "results": [
+        {
+          "seed": 7900,
+          "score": 2509,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 10,
+          "maxTierName": "神奶蛙",
+          "planMsAvg": 619.7106146153849,
+          "over": false
+        },
+        {
+          "seed": 7901,
+          "score": 1140,
+          "drops": 124,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 220.8162225806449,
+          "over": false
+        },
+        {
+          "seed": 7902,
+          "score": 1599,
+          "drops": 211,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 733.3377881516584,
+          "over": true
+        },
+        {
+          "seed": 7903,
+          "score": 1907,
+          "drops": 246,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 3,
+          "maxTier": 8,
+          "maxTierName": "椰子",
+          "planMsAvg": 581.2307678861793,
+          "over": true
+        },
+        {
+          "seed": 7904,
+          "score": 1721,
+          "drops": 204,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 502.10731862745115,
+          "over": false
+        },
+        {
+          "seed": 7905,
+          "score": 2175,
+          "drops": 260,
+          "revives": 1,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 616.412930384615,
+          "over": false
+        },
+        {
+          "seed": 7906,
+          "score": 1987,
+          "drops": 244,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 753.4244774590159,
+          "over": true
+        },
+        {
+          "seed": 7907,
+          "score": 2200,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 615.9238923076928,
+          "over": false
+        }
+      ]
+    },
+    {
+      "name": "碎果惩罚 x8",
+      "n": 8,
+      "avg": 1886,
+      "median": 2066,
+      "min": 1140,
+      "max": 2200,
+      "wall": 182.664,
+      "sqrtAvg": 1918.5082746759265,
+      "results": [
+        {
+          "seed": 7900,
+          "score": 2066,
+          "drops": 260,
+          "revives": 1,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 643.9331261538462,
+          "over": false
+        },
+        {
+          "seed": 7901,
+          "score": 1140,
+          "drops": 124,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 218.55169193548383,
+          "over": false
+        },
+        {
+          "seed": 7902,
+          "score": 1599,
+          "drops": 211,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 705.5883421800945,
+          "over": true
+        },
+        {
+          "seed": 7903,
+          "score": 2200,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 466.99868884615387,
+          "over": false
+        },
+        {
+          "seed": 7904,
+          "score": 1721,
+          "drops": 204,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 516.721486764706,
+          "over": false
+        },
+        {
+          "seed": 7905,
+          "score": 2175,
+          "drops": 260,
+          "revives": 1,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 590.1653780769233,
+          "over": false
+        },
+        {
+          "seed": 7906,
+          "score": 1987,
+          "drops": 244,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 0,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 729.9095053278686,
+          "over": true
+        },
+        {
+          "seed": 7907,
+          "score": 2200,
+          "drops": 260,
+          "revives": 0,
+          "stranded": 0,
+          "bigPairs": 1,
+          "maxTier": 9,
+          "maxTierName": "半奶蛙",
+          "planMsAvg": 623.1053242307689,
+          "over": false
+        }
+      ]
+    }
+  ],
+  "configs": [
+    {
+      "name": "碎果惩罚 原样",
+      "weights": {}
+    },
+    {
+      "name": "碎果惩罚 x4",
+      "weights": {
+        "fragFruit": 4
+      }
+    },
+    {
+      "name": "碎果惩罚 x8",
+      "weights": {
+        "fragFruit": 8
+      }
+    }
+  ]
+}

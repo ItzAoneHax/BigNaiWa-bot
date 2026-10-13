@@ -1,0 +1,33 @@
+{
+  "base": "http://127.0.0.1:13133/",
+  "mode": "turbo",
+  "think": {},
+  "stats": {
+    "games": [],
+    "lastScore": 0,
+    "score": 0,
+    "drops": 189,
+    "planMs": 149166.00000000745,
+    "planN": 189,
+    "maxTier": 9,
+    "revivesUsed": 0,
+    "blockedSubmits": 0,
+    "simFrames": 10889,
+    "startedAt": 1791827766234,
+    "elapsed": 152.912,
+    "status": "timeout",
+    "error": null,
+    "gameStart": {
+      "drop": 0,
+      "plan": 0,
+      "planN": 0,
+      "tier": 0,
+      "revive": 0
+    },
+    "settleWait": 0,
+    "lastPlanMs": 1398
+  },
+  "shots": [
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\shot-defaultsmoke-final.png"
+  ]
+}

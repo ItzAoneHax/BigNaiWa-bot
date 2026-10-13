@@ -1,0 +1,5 @@
+[
+  {"name":"碎果惩罚 原样","weights":{}},
+  {"name":"碎果惩罚 x4","weights":{"fragFruit":4}},
+  {"name":"碎果惩罚 x8","weights":{"fragFruit":8}}
+]

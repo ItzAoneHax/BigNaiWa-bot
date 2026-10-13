@@ -1,0 +1,11 @@
+并行调参：3 个配置 × 8 局，worker=8，planner={"step":12,"h1":0.8,"h2":1.6,"topK":4,"lookahead":2,"nextMode":"known"}
+跑 旧(新特征关掉) ... avg=1051.8 max=1116 (200s)
+跑 新(默认) ... avg=999.9 max=1071 (240s)
+跑 更激进用币 ... avg=999.9 max=1071 (242s)
+
+配置                          n       平均      中位      最低      最高       耗时
+旧(新特征关掉)                     8   1051.8    1073     960    1116     200s
+新(默认)                        8    999.9    1007     939    1071     240s
+更激进用币                        8    999.9    1007     939    1071     242s
+
+结果已写入 C:\Users\limin\Documents\deepseek-harness\default-workspace\BigNaiWa-bot\out\tune-2026-10-13T04-19-23.json

@@ -1,0 +1,7 @@
+[
+  {"name":"la1-control",  "opts":{"lookahead":1}},
+  {"name":"la2-expect",   "opts":{"lookahead":2,"nextMode":"expected"}},
+  {"name":"la2-known",    "opts":{"lookahead":2,"nextMode":"known"}},
+  {"name":"la2-known-s6", "opts":{"lookahead":2,"nextMode":"known","step":6}},
+  {"name":"la1-s6",       "opts":{"lookahead":1,"step":6}}
+]

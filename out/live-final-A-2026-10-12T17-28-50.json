@@ -1,0 +1,43 @@
+{
+  "base": "http://127.0.0.1:1556/",
+  "mode": "turbo",
+  "think": {
+    "step": 8,
+    "h1": 1.2,
+    "h2": 2.6,
+    "topK": 8,
+    "lookahead": 2,
+    "nextMode": "known",
+    "weights": {
+      "bump": 0,
+      "adj": 2.4
+    }
+  },
+  "stats": {
+    "games": [],
+    "lastScore": 0,
+    "score": 0,
+    "drops": 143,
+    "planMs": 391818.2000000067,
+    "planN": 143,
+    "maxTier": 8,
+    "revivesUsed": 0,
+    "blockedSubmits": 0,
+    "simFrames": 7669,
+    "startedAt": 1791825731224,
+    "elapsed": 398.843,
+    "status": "error",
+    "error": "TypeError: Cannot read properties of undefined (reading 'toFixed')\n    at <anonymous>:1091:48\n    at Array.map (<anonymous>)\n    at Object.plan (<anonymous>:1091:33)\n    at thinkAndDrop (<anonymous>:1259:19)\n    at turboLoop (<anonymous>:1343:9)",
+    "gameStart": {
+      "drop": 0,
+      "plan": 0,
+      "planN": 0,
+      "tier": 0,
+      "revive": 0
+    },
+    "lastPlanMs": 2741
+  },
+  "shots": [
+    "C:\\Users\\limin\\Documents\\deepseek-harness\\default-workspace\\BigNaiWa-bot\\out\\shot-final-A-final.png"
+  ]
+}
