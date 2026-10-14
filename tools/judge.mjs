@@ -65,6 +65,7 @@ export function playGame(seed, cfg, opts = {}) {
   const marks = {};
   const board = {};          // 第 N 手时的「盘面健康度」：堆顶高度 / 球数 / 最大等级
   let planMs = 0, planN = 0, revives = 0, deaths = 0, waitSum = 0;
+  let preStrand = 0, preTrapped = 0;
 
   while (w.drops < maxDrops) {
     /* ① 推进到「可以并且应该出手」的时刻 */
@@ -100,6 +101,7 @@ export function playGame(seed, cfg, opts = {}) {
 
     /* ③ 下一帧才真正落子（对应 planLifecycle 里 frame >= dropFrame 的判断） */
     const preTop = E.stackTop(w), preN = w.balls.length;   // 落子前的盘面（见下）
+    const preF = P.features(w); preStrand = preF.strandN; preTrapped = preF.strandTrapped;
     E.update(w, E.CFG.FIXED);
     if (w.over) {
       deaths++;
@@ -112,7 +114,7 @@ export function playGame(seed, cfg, opts = {}) {
         marks[m] = w.score;
         /* ⚠️ 必须记**落子前**的堆顶：落子后那颗球悬在 y=74 的投放点，
            stackTop 会被它顶到 40~57，量出来的是投放点而不是盘面（第一版踩过） */
-        board[m] = { top: Math.round(preTop), n: preN };
+        board[m] = { top: Math.round(preTop), n: preN, strand: preStrand, trapped: preTrapped };
       }
     }
   }

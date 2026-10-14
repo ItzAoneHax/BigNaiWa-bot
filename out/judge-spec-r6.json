@@ -1,0 +1,21 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "seeds": [9800, 9801, 9802, 9803, 9804, 9805, 9806, 9807, 9808, 9809, 9810, 9811, 9812, 9813, 9814, 9815],
+  "configs": [
+    {
+      "name": "base",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" }
+    },
+    {
+      "name": "strand6",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "strand": 6 }
+    },
+    {
+      "name": "strand20",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "strand": 20 }
+    }
+  ]
+}

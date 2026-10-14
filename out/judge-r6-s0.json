@@ -1,0 +1,200 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9800,
+      9801,
+      9802,
+      9803,
+      9804,
+      9805,
+      9806,
+      9807,
+      9808,
+      9809,
+      9810,
+      9811,
+      9812,
+      9813,
+      9814,
+      9815
+    ],
+    "configs": [
+      {
+        "name": "base",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "strand6",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "strand": 6
+        }
+      },
+      {
+        "name": "strand20",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "strand": 20
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9800
+  ],
+  "results": [
+    {
+      "seed": 9800,
+      "name": "base",
+      "protocol": "live",
+      "score": 2367,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 268,
+        "100": 786,
+        "150": 1297,
+        "200": 1722,
+        "250": 2367
+      },
+      "board": {
+        "50": {
+          "top": 260,
+          "n": 12
+        },
+        "100": {
+          "top": 260,
+          "n": 14
+        },
+        "150": {
+          "top": 152,
+          "n": 19
+        },
+        "200": {
+          "top": 159,
+          "n": 24
+        },
+        "250": {
+          "top": 251,
+          "n": 18
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2002.9419492000022,
+      "wallMs": 501344
+    },
+    {
+      "seed": 9800,
+      "name": "strand6",
+      "protocol": "live",
+      "score": 1698,
+      "drops": 222,
+      "maxTier": 8,
+      "revives": 0,
+      "deaths": 1,
+      "ended": "over",
+      "marks": {
+        "50": 338,
+        "100": 744,
+        "150": 1122,
+        "200": 1585
+      },
+      "board": {
+        "50": {
+          "top": 260,
+          "n": 8
+        },
+        "100": {
+          "top": 253,
+          "n": 16
+        },
+        "150": {
+          "top": 181,
+          "n": 29
+        },
+        "200": {
+          "top": 140,
+          "n": 31
+        }
+      },
+      "waitAvgFrames": 21.95045045045045,
+      "planMsAvg": 2222.3926279279244,
+      "wallMs": 494056
+    },
+    {
+      "seed": 9800,
+      "name": "strand20",
+      "protocol": "live",
+      "score": 2159,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 329,
+        "100": 777,
+        "150": 1260,
+        "200": 1642,
+        "250": 2159
+      },
+      "board": {
+        "50": {
+          "top": 260,
+          "n": 10
+        },
+        "100": {
+          "top": 260,
+          "n": 16
+        },
+        "150": {
+          "top": 282,
+          "n": 22
+        },
+        "200": {
+          "top": 143,
+          "n": 29
+        },
+        "250": {
+          "top": 89,
+          "n": 31
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1669.412922400001,
+      "wallMs": 417860
+    }
+  ]
+}

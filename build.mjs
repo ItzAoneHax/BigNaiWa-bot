@@ -81,8 +81,9 @@ const WORKER_SOURCE = ${JSON.stringify(workerBundle)};
 ${module('engine', 'engine.js')}
 ${module('planner', 'planner.js')}
 ${module('hud', 'hud.js')}
+${module('audit', 'audit.js')}
 ${module('bot', 'bot.js')}
-window.NaiwaBot = { engine: MODS['engine'], planner: MODS['planner'], hud: MODS['hud'],
+window.NaiwaBot = { engine: MODS['engine'], planner: MODS['planner'], hud: MODS['hud'], audit: MODS['audit'],
                     createBot: MODS['bot'].createBot, run: MODS['bot'].run, EMBEDDED_SHAPES };
 console.log('%c[合成大奶娃 bot] 已装载 —— window.NaiwaBot.run({mode:"realtime"}) 开始',
   'color:#e91e63;font-weight:bold');

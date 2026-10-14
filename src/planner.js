@@ -37,6 +37,7 @@ export const DEFAULT_WEIGHTS = {
   flat:    0.00,
   pool:    0.00,
   ground:  0.00,
+  strand:  0.00,   // 孤立小果（大果之间再也合不掉的小块）
   /* 用户反馈的两项「长久受益」（默认关闭，用 tools/tune.mjs 验证过才开）：
      stuck —— 底部堆着没有同级伙伴的大果（占地方又合不掉）
      space —— 这一手合成释放掉的空间（大果收益随半径平方增长） */
@@ -236,12 +237,50 @@ export function features(w) {
   }
   ground = ground / 3;
 
+  /* ------------------------------------------------------------------------
+   *  「孤立小果」（strand）—— 用户 2026-10-14 的反馈：大块头中间塞了太多小块。
+   *
+   *  判据和 src/audit.js 的盘面统计完全一致（口径统一，便于对照日志）：
+   *    · 小果 = tier ≤ 3（葡萄/樱桃/橘子/柠檬）
+   *    · 孤立 = 2.2×(两球半径和) 之内**没有同级伙伴** → 这颗已经合不掉了
+   *    · 被压住（上方有更大的球、且水平方向压着它）= 连滚动都出不来 → 更糟
+   *  过去只有 adj（同级靠近给奖励），却没有「同级根本够不着」的惩罚，
+   *  也没有任何一项关心「小块是不是被困住」—— 这里补上。
+   * ---------------------------------------------------------------------- */
+  let strand = 0, strandN = 0, strandTrapped = 0;
+  for (let i = 0; i < n; i++) {
+    const a = balls[i];
+    if (a.dead || a.tier > 3) continue;
+    let partner = false;
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue;
+      const b = balls[j];
+      if (b.dead || b.tier !== a.tier) continue;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const reach = (a.r + b.r) * 2.2;
+      if (dx * dx + dy * dy < reach * reach) { partner = true; break; }
+    }
+    if (partner) continue;
+    strandN++;
+    let covered = false;
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue;
+      const o = balls[j];
+      if (o.dead || o.r < a.r * 1.2) continue;
+      if (o.y > a.y - a.r * 0.4) continue;            // 得在它上面
+      if (Math.abs(o.x - a.x) > o.r) continue;        // 得水平压着它
+      covered = true; break;
+    }
+    if (covered) { strandTrapped++; strand += 1.6; } else strand += 1.0;
+  }
+  strand = strand / 4;
+
   return {
     n, top, above, aboveMass, buried: buried / 10,
     bigPair: bigPair / 12,
     blocked: blocked / 12,
     stuck: stuck / 4,
-    flat, pool, ground,
+    flat, pool, ground, strand, strandN, strandTrapped,
     /* 本轮推演里合成「释放掉的面积」：两颗消失、一颗更大的顶上，净腾出来的空间。
        加大果的收益随半径平方增长 —— 合掉两只半奶蛙腾出的地方，是合掉两颗葡萄的 160 倍。 */
     space: (w.freed || 0) / 10000,
@@ -295,6 +334,8 @@ export function evaluate(w, before, wt = DEFAULT_WEIGHTS) {
   v -= (wt.flat || 0) * f.flat;
   v += (wt.pool || 0) * f.pool;
   v += (wt.ground || 0) * f.ground;
+  /* 孤立小果惩罚（默认 0）：大块头之间塞着的、再也合不掉的小块 */
+  v -= (wt.strand || 0) * f.strand;
   if (wt.space) v += wt.space * f.space;
   return v;
 }

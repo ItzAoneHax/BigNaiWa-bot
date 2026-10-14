@@ -14,6 +14,31 @@
 export const DIAG = { updates: 0, clones: 0 };
 export function resetDiag() { DIAG.updates = 0; DIAG.clones = 0; }
 
+/* ---------------------------------------------------------------------------
+ *  测试用审计（默认关闭 —— 关着时只有一个布尔判断，数值一个比特都不动）
+ *
+ *  用途：记录「本来应该发生碰撞、但是没发生」的配对，供 src/audit.js 在
+ *  **真机逐帧重放**时收集。目前只认两类：
+ *
+ *    missBroad —— 球球粗筛用的是 shapes.json 里的**近似包围圆 rb**（为了和线上
+ *                 逐位一致，必须照抄），而 11 个等级里有 7 个的 rb 比真实外接
+ *                 半径小约 0.1px。于是「真实外形已经挨上、但 rb 和 rb 还没碰上」
+ *                 的配对会被粗筛直接 continue 掉 —— 这就是字面意义上的
+ *                 「本应碰撞却没有碰撞」。它在线上的原版引擎里同样存在
+ *                 （我们是照抄的），所以这个日志主要用于量化它出现的频率与影响。
+ *    fast      —— 单个子步内位移特别大的球（穿隧金丝雀）：子步 dt=1/180，
+ *                 位移 20px 相当于 3600px/s，正常玩法里不该出现。
+ * ------------------------------------------------------------------------- */
+export const AUDIT = {
+  on: false,          // 总开关（src/audit.js 打开）
+  fastPx: 20,         // fast 事件阈值（单个子步位移，px）
+  max: 64,            // 每批最多缓存多少条（由 audit.js 每帧取走）
+  events: [],
+  hit(e) { if (this.events.length < this.max) this.events.push(e); },
+  drain() { const a = this.events; this.events = []; return a; },
+  reset() { this.events = []; },
+};
+
 /* ---------------------------------------------------------------- 常量 ---- */
 
 export const CFG = {
@@ -382,6 +407,16 @@ const _now = (typeof performance !== 'undefined' ? () => performance.now() : () 
 
 /* stepPhysics 收尾的合成处理从 stepsPerSubstep 中抽出来（保持原来的调用顺序） */
 
+/* 点到线段距离（审计用：判断高速球这一子步有没有从别的球身上扫过去） */
+function segPointDist(ax, ay, bx, by, px, py) {
+  const dx = bx - ax, dy = by - ay;
+  const L2 = dx * dx + dy * dy;
+  let t = L2 > 0 ? ((px - ax) * dx + (py - ay) * dy) / L2 : 0;
+  if (t < 0) t = 0; else if (t > 1) t = 1;
+  const qx = ax + dx * t - px, qy = ay + dy * t - py;
+  return Math.sqrt(qx * qx + qy * qy);
+}
+
 export function stepPhysics(w, dt) {
   const balls = w.balls;
   const nBalls = balls.length;
@@ -400,6 +435,38 @@ if (PROF.on) PROF.t[0] += _now();
     b.px = b.x;
     b.py = b.y;
     b.vy += CFG.GRAVITY * dt;
+    /* 审计：单子步位移过大 = 穿隧风险（子步 dt=1/180，20px 相当于 3600px/s）。
+       光是快还不算漏碰撞，要判「真穿隧」：这一子步的**扫掠线段**钻进了某个球的
+       外形里（minD < 半径和），而且**子步两端都在外面**（dStart/dEnd > 半径和）——
+       那就是离散采样把一次接触整个跳过去了：本应碰撞，却没有碰撞。
+       （两端有一端已经在半径和之内 = 本来就在接触，不算漏。） */
+    if (AUDIT.on) {
+      const mv = Math.max(Math.abs(b.vx), Math.abs(b.vy)) * dt;
+      if (mv > AUDIT.fastPx) {
+        const sx = b.x, sy = b.y;
+        const ex = b.x + b.vx * dt, ey = b.y + b.vy * dt;
+        let minD = Infinity, bestK = -1;
+        for (let k = 0; k < nBalls; k++) {
+          if (k === i) continue;
+          const o = balls[k];
+          if (o.dead) continue;
+          const d = segPointDist(sx, sy, ex, ey, o.x, o.y);
+          if (d < minD) { minD = d; bestK = k; }
+        }
+        if (bestK >= 0) {
+          const o = balls[bestK];
+          const sum = b.rbe + o.rbe;
+          const dStart = Math.sqrt((o.x - sx) * (o.x - sx) + (o.y - sy) * (o.y - sy));
+          const dEnd = Math.sqrt((o.x - ex) * (o.x - ex) + (o.y - ey) * (o.y - ey));
+          AUDIT.hit({
+            k: 'fast', tier: b.tier, mv: +mv.toFixed(2), vx: +b.vx.toFixed(1), vy: +b.vy.toFixed(1),
+            nearTier: o.tier, sum: +sum.toFixed(2), sweep: +minD.toFixed(2),
+            dStart: +dStart.toFixed(2), dEnd: +dEnd.toFixed(2),
+            tunnel: dStart > sum && dEnd > sum && minD < sum,
+          });
+        }
+      }
+    }
     b.pvx = b.vx;
     b.pvy = b.vy;
     b.x += b.vx * dt;
@@ -462,7 +529,18 @@ if (PROF.on) PROF.t[2] += _now();
 
         const cdx = b.x - a.x, cdy = b.y - a.y;
         const rbSum = a.rb + b.rb;
-        if (cdx * cdx + cdy * cdy >= rbSum * rbSum) continue;
+        const d2 = cdx * cdx + cdy * cdy;
+        if (d2 >= rbSum * rbSum) {
+          /* 审计：真实外形已经挨上、却被「近似包围圆」粗筛挡掉的配对 */
+          if (AUDIT.on) {
+            const reSum = a.rbe + b.rbe;
+            if (reSum > rbSum && d2 < reSum * reSum) {
+              const d = Math.sqrt(d2);
+              AUDIT.hit({ k: 'missBroad', t: [a.tier, b.tier], d, rb: rbSum, re: reSum, over: reSum - d });
+            }
+          }
+          continue;
+        }
 
         const pb = b.np;
         const brb = b.rb;

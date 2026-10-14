@@ -30,7 +30,7 @@ function arg(name, dflt) {
 }
 
 /* 要体检的特征（0 = 现有但是关着的，其余是本轮新增） */
-const FEATURES = ['flat', 'pool', 'ground', 'mono', 'bump', 'stuck'];
+const FEATURES = ['flat', 'pool', 'ground', 'strand', 'mono', 'bump', 'stuck'];
 const SCALES = String(arg('scales', '0.25,0.5,1')).split(',').map(Number);
 const NB = Number(arg('boards', 4));
 const THINK = { step: 8, h1: 1.2, h2: 2.6, topK: 8, lookahead: 2, innerTop: 4, nextMode: 'known' };
@@ -85,7 +85,7 @@ for (const bd of boards) {
     const f = P.features(o.sim);
     rows.push({ x, gain: o.gain, v: o.v, f });
   }
-  for (const k of ['flat', 'pool', 'ground', 'mono', 'bump', 'stuck', 'merge', 'adj', 'bigPair', 'blocked', 'bigHigh', 'buried']) {
+  for (const k of ['flat', 'pool', 'ground', 'strand', 'strandN', 'strandTrapped', 'mono', 'bump', 'stuck', 'merge', 'adj', 'bigPair', 'blocked', 'bigHigh', 'buried']) {
     let lo = Infinity, hi = -Infinity;
     for (const r of rows) {
       const val = (k === 'merge') ? r.gain : r.f[k];

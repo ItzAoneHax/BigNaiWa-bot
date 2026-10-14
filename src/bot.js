@@ -21,6 +21,7 @@
 import * as E from './engine.js';
 import * as P from './planner.js';
 import { createIsland, STRENGTH } from './hud.js';
+import { createAudit } from './audit.js';
 
 const DEFAULTS = {
   mode: 'realtime',        // 'realtime'（跟着游戏节奏）| 'turbo'（快进刷分）
@@ -232,6 +233,8 @@ export function createBot(userOpts = {}) {
     const canvas = document.getElementById('game');
     const stage = document.getElementById('stage');
     if (!canvas || !stage) return false;
+    /* 测试用审计：在真机落子之前抓一份状态，稍后逐帧重放对照（默认关闭） */
+    bot.audit.noteDrop(x);
     const rect = canvas.getBoundingClientRect();
     const ev = new PointerEvent('pointerdown', {
       clientX: rect.left + (x / E.CFG.W) * rect.width,
@@ -724,6 +727,14 @@ export function createBot(userOpts = {}) {
   bot.stop = stop;
   bot.say = say;
   bot.frameNow = () => bot.frame;
+  /* 测试用审计（懒加载）：__NAIWA_BOT__.audit.enable() / .stats() / .dump() */
+  Object.defineProperty(bot, 'audit', {
+    get() {
+      if (!bot._audit) bot._audit = createAudit(bot);
+      return bot._audit;
+    },
+    configurable: true,
+  });
   return bot;
 }
 

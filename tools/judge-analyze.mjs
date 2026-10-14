@@ -139,15 +139,17 @@ for (const a of arms) {
 /* ---- 盘面健康度（低方差的「还能活多久」代理指标；老结果没有这个字段） ---- */
 const hasBoard = rows.some(r => r.board);
 if (hasBoard) {
-  console.log('\n---------------- 第 N 手时的盘面健康度（堆顶 y，越小越危险；球数） ----------------');
-  console.log('配置'.padEnd(10) + MARKS.map(m => ('@' + m).padStart(14)).join(''));
+  console.log('\n---------------- 第 N 手时的盘面（堆顶 y / 球数 / 孤立小果 / 被压住，越小越危险：y 小） ----------------');
+  console.log('配置'.padEnd(10) + MARKS.map(m => ('@' + m).padStart(20)).join(''));
   for (const a of arms) {
     const rs = byArm.get(a);
     const cells = MARKS.map(m => {
       const v = rs.map(r => r.board && r.board[m]).filter(Boolean);
-      if (!v.length) return '—'.padStart(14);
-      return `${Math.round(mean(v.map(b => b.top)))},${mean(v.map(b => b.n)).toFixed(0)}只`.padStart(14);
-    }).join('');
+      if (!v.length) return '—'.padStart(20);
+      const st = v.filter(b => b.strand !== undefined);
+      const extra = st.length ? `,${mean(st.map(b => b.strand)).toFixed(1)}/${mean(st.map(b => b.trapped)).toFixed(1)}` : '';
+      return `${Math.round(mean(v.map(b => b.top)))},${mean(v.map(b => b.n)).toFixed(0)}只${extra}`;
+    }).map(s => s.padStart(20)).join('');
     console.log(String(a).padEnd(10) + cells);
   }
 }

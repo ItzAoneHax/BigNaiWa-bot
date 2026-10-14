@@ -1,0 +1,4 @@
+seed=9804 base                 score= 2113 drops= 250 max= 9 rev=0 wait=21.9f cap 506s
+seed=9804 strand6              score= 2171 drops= 250 max= 9 rev=0 wait=21.9f cap 361s
+seed=9804 strand20             score= 1883 drops= 235 max= 8 rev=0 wait=21.9f over 423s
+wrote C:\Users\limin\IdeaProjects\BigNaiWa-bot\out\judge-r6-s4.json
