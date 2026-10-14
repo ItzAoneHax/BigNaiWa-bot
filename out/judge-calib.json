@@ -1,0 +1,49 @@
+{
+  "protocol": "live",
+  "maxDrops": 600,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 600,
+    "seeds": [
+      9101
+    ],
+    "configs": [
+      {
+        "name": "base",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9101
+  ],
+  "results": [
+    {
+      "seed": 9101,
+      "name": "base",
+      "score": 1798,
+      "drops": 229,
+      "maxTier": 8,
+      "revives": 0,
+      "deaths": 1,
+      "ended": "over",
+      "marks": {
+        "50": 336,
+        "100": 758,
+        "150": 1164,
+        "200": 1470
+      },
+      "planMsAvg": 1678.6917925764194,
+      "wallMs": 384925.48400000005
+    }
+  ]
+}

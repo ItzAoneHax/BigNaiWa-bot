@@ -1,0 +1,321 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9500,
+      9501,
+      9502,
+      9503,
+      9504,
+      9505,
+      9506,
+      9507,
+      9508,
+      9509,
+      9510,
+      9511,
+      9512,
+      9513,
+      9514,
+      9515
+    ],
+    "configs": [
+      {
+        "name": "base",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "flat40",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "flat": 40
+        }
+      },
+      {
+        "name": "pool100",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "pool": 100
+        }
+      },
+      {
+        "name": "ground800",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "ground": 800
+        }
+      },
+      {
+        "name": "mono6000",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "mono": 6000
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9513
+  ],
+  "results": [
+    {
+      "seed": 9513,
+      "name": "base",
+      "protocol": "live",
+      "score": 2183,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 298,
+        "100": 801,
+        "150": 1285,
+        "200": 1715,
+        "250": 2183
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 15
+        },
+        "100": {
+          "top": 51,
+          "n": 17
+        },
+        "150": {
+          "top": 43,
+          "n": 22
+        },
+        "200": {
+          "top": 57,
+          "n": 26
+        },
+        "250": {
+          "top": 43,
+          "n": 31
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2273.4570827999996,
+      "wallMs": 569110
+    },
+    {
+      "seed": 9513,
+      "name": "flat40",
+      "protocol": "live",
+      "score": 2177,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 1,
+      "deaths": 1,
+      "ended": "cap",
+      "marks": {
+        "50": 342,
+        "100": 810,
+        "150": 1325,
+        "200": 1727,
+        "250": 2177
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 12
+        },
+        "100": {
+          "top": 42,
+          "n": 17
+        },
+        "150": {
+          "top": 43,
+          "n": 18
+        },
+        "200": {
+          "top": 57,
+          "n": 25
+        },
+        "250": {
+          "top": 43,
+          "n": 30
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1764.9544975999934,
+      "wallMs": 441831
+    },
+    {
+      "seed": 9513,
+      "name": "pool100",
+      "protocol": "live",
+      "score": 2317,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 338,
+        "100": 816,
+        "150": 1369,
+        "200": 1752,
+        "250": 2317
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 11
+        },
+        "100": {
+          "top": 51,
+          "n": 16
+        },
+        "150": {
+          "top": 43,
+          "n": 15
+        },
+        "200": {
+          "top": 57,
+          "n": 23
+        },
+        "250": {
+          "top": 43,
+          "n": 22
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1501.6517048000037,
+      "wallMs": 375897
+    },
+    {
+      "seed": 9513,
+      "name": "ground800",
+      "protocol": "live",
+      "score": 2159,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 332,
+        "100": 755,
+        "150": 1196,
+        "200": 1690,
+        "250": 2159
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 12
+        },
+        "100": {
+          "top": 51,
+          "n": 18
+        },
+        "150": {
+          "top": 43,
+          "n": 25
+        },
+        "200": {
+          "top": 57,
+          "n": 28
+        },
+        "250": {
+          "top": 43,
+          "n": 32
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2439.371912000004,
+      "wallMs": 610555
+    },
+    {
+      "seed": 9513,
+      "name": "mono6000",
+      "protocol": "live",
+      "score": 2281,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 341,
+        "100": 817,
+        "150": 1349,
+        "200": 1717,
+        "250": 2281
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 13
+        },
+        "100": {
+          "top": 51,
+          "n": 15
+        },
+        "150": {
+          "top": -7,
+          "n": 19
+        },
+        "200": {
+          "top": 57,
+          "n": 28
+        },
+        "250": {
+          "top": 43,
+          "n": 23
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1935.0479884000197,
+      "wallMs": 484366
+    }
+  ]
+}

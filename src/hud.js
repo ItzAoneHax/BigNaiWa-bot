@@ -106,8 +106,10 @@ export function createIsland(bot) {
     () => opts.mode, (v) => bot.setMode(v));
   const segBoard = segment('排行榜', [{ label: '拦截提交', value: true }, { label: '允许上榜', value: false }],
     () => !!opts.blockLeaderboard, (v) => { opts.blockLeaderboard = v; });
-  const segRevive = segment('复活币', [{ label: '自动用', value: true }, { label: '不用', value: false }],
-    () => !!opts.autoRevive, (v) => { opts.autoRevive = v; });
+  /* 「复活币打法」—— 语义：**不是**许不许用币（币由游戏结算、脚本照常点复活），
+     而是危机时按哪种心态选落点：搏一把（手里有币 → 敢堆高换空间）or 保守（当没退路）。 */
+  const segRevive = segment('复活币打法', [{ label: '搏一把', value: 'aggressive' }, { label: '保守', value: 'conservative' }],
+    () => opts.reviveStyle || 'aggressive', (v) => { opts.reviveStyle = v; });
   const segStrength = segment('搜索', Object.keys(STRENGTH).map(k => ({ label: STRENGTH[k].label, value: k })),
     () => bot.strength || 'normal', (v) => { bot.strength = v; Object.assign(opts.think, STRENGTH[v]); });
   const segTiming = segment('投掷时机', [{ label: '自动', value: 'auto' }, { label: '立刻', value: 'now' }, { label: '等稳', value: 'settle' }],
@@ -176,10 +178,8 @@ export function createIsland(bot) {
     statVal.textContent = paused ? '暂停' : waiting ? '本局结束，等你重开' : thinking ? 'Worker 推演中' : '对局进行中';
     infoVal.textContent =
       `决策 ${st.lastPlanMs}ms / 均 ${st.planN ? (st.planMs / st.planN).toFixed(0) : 0}ms　候选 ${st.lastCand || '—'}\n` +
-      `时机 ${st.lastChoice || '—'}${st.lastDelayFrames ? ' 等 ' + st.lastDelayFrames + ' 帧' : ''}　复活币 ${st.revivesLeft ?? 0}\n` +
-      `时机分布 立刻${st.choices ? st.choices.now : 0} / 等稳${st.choices ? st.choices.settle : 0}\n` +
-      `最高分 ${st.bestScore ?? S.best ?? 0}　本局最大 ${st.maxTier ? (bot.fruitName(st.maxTier)) : '—'}
-` +
+      `时机 ${(opts.think.holdForQuiet === false || opts.think.timing === 'now') ? '立刻出手' : '等盘面安静'}${st.holdFrames ? '（本手已等 ' + st.holdFrames + ' 帧）' : ''}　复活币 ${st.revivesLeft ?? 0}\n` +
+      `最高分 ${st.bestScore ?? S.best ?? 0}　本局最大 ${st.maxTier ? (bot.fruitName(st.maxTier)) : '—'}\n` +
       `推演并行 ${st.workerCount || 1}x　${st.usingWorker ? 'Worker 线程' : '主线程'}`;
     btnPause.textContent = paused ? '继续' : '暂停';
     for (const s of [segMode, segBoard, segRevive, segStrength, segTiming]) s.sync();

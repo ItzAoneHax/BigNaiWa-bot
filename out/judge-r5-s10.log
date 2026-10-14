@@ -1,0 +1,3 @@
+seed=9610 aggressive           score= 2337 drops= 250 max=10 rev=0 wait=21.9f cap 368s
+seed=9610 conservative         score= 2295 drops= 250 max=10 rev=0 wait=21.9f cap 394s
+wrote C:\Users\limin\IdeaProjects\BigNaiWa-bot\out\judge-r5-s10.json

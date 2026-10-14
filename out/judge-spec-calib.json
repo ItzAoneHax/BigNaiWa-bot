@@ -1,0 +1,8 @@
+{
+  "protocol": "live",
+  "maxDrops": 600,
+  "seeds": [9101],
+  "configs": [
+    { "name": "base", "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" } }
+  ]
+}

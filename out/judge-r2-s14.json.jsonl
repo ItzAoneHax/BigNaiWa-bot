@@ -1,0 +1,3 @@
+{"seed":9214,"name":"base","protocol":"live","score":2063,"drops":250,"maxTier":9,"revives":0,"deaths":0,"ended":"cap","marks":{"50":347,"100":802,"150":1297,"200":1617,"250":2063},"waitAvgFrames":21.912,"planMsAvg":1449.1048679999983,"wallMs":362695}
+{"seed":9214,"name":"ply1","protocol":"live","score":2076,"drops":250,"maxTier":9,"revives":0,"deaths":0,"ended":"cap","marks":{"50":327,"100":763,"150":1259,"200":1649,"250":2076},"waitAvgFrames":21.912,"planMsAvg":350.81772719999987,"wallMs":88180}
+{"seed":9214,"name":"wait","protocol":"wait","score":2162,"drops":250,"maxTier":9,"revives":0,"deaths":0,"ended":"cap","marks":{"50":351,"100":821,"150":1244,"200":1736,"250":2162},"waitAvgFrames":59.256,"planMsAvg":1384.4317620000008,"wallMs":347115}

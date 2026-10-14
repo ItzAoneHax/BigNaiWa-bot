@@ -1,0 +1,31 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "seeds": [9500, 9501, 9502, 9503, 9504, 9505, 9506, 9507, 9508, 9509, 9510, 9511, 9512, 9513, 9514, 9515],
+  "configs": [
+    {
+      "name": "base",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" }
+    },
+    {
+      "name": "flat40",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "flat": 40 }
+    },
+    {
+      "name": "pool100",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "pool": 100 }
+    },
+    {
+      "name": "ground800",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "ground": 800 }
+    },
+    {
+      "name": "mono6000",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" },
+      "weights": { "mono": 6000 }
+    }
+  ]
+}

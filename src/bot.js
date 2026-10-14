@@ -26,7 +26,14 @@ const DEFAULTS = {
   mode: 'realtime',        // 'realtime'（跟着游戏节奏）| 'turbo'（快进刷分）
   sliceMs: 24,             // turbo 每片最多跑多久，让出主线程
   renderEvery: 6,          // turbo 每多少物理帧重绘一次
-  autoRevive: true,        // 有复活币就用（币当资源花）
+  autoRevive: true,        // 判负时自动点复活（币由游戏结算，脚本只是替玩家点）
+  /* 复活币打法（用户明确的需求，2026-10-14 重定义）：
+       这个开关**不是**「许不许用币」—— 币在游戏里是自动消耗的。
+       aggressive（搏一把）：手里有币 → 危机时敢用激进打法，推演里允许用币续命
+                             （风险项按 riskScaleWithRevive=0.45 打折）
+       conservative（保守）  ：推演里不许用币续命（越线=直接判死），风险项不打折 ——
+                             危机时按「没有退路」来选落点 */
+  reviveStyle: 'aggressive',
   blockLeaderboard: true,  // 拦截成绩自动提交
   seed: null,              // 给定 seed → 可复现随机数（turbo 刷分用）
   verbose: false,
@@ -38,9 +45,10 @@ const DEFAULTS = {
     innerTop: 4,
     nextMode: 'known',     // 下一颗水果是已知的(state.next) → 当成两手连手棋来算
     budgetMs: 6000,
-    timing: 'auto',        // 'auto' | 'now' | 'settle'
-    quietSpeed: 60,
-    maxWaitFrames: 180,
+    timing: 'auto',        // 'auto' | 'now'（立刻丢）| 'settle'（等安静）—— 现在真的生效了
+    holdForQuiet: true,    // 决策前先等盘面安静（实测 +2.5%，见 README 第十三节）
+    quietSpeed: 60,        // 「安静」的判定：最大速度 <= 它
+    maxWaitFrames: 180,    // 最多等 3 秒游戏时间
     waitPenaltyPerFrame: 0.02,
   },
 };
@@ -79,6 +87,7 @@ export function createBot(userOpts = {}) {
       simFrames: 0, maxTier: 0, revivesUsed: 0, blockedSubmits: 0, revivesLeft: 0,
       bestScore: 0, startedAt: 0, elapsed: 0, status: 'idle', error: null,
       workerReady: false, usingWorker: false, workerCount: 0,
+      holdFrames: 0,
       choices: { now: 0, settle: 0, quiet: 0 },
       gameStart: { drop: 0, plan: 0, planN: 0, revive: 0 },
     },
@@ -89,7 +98,7 @@ export function createBot(userOpts = {}) {
     try {
       localStorage.setItem(PREFS_KEY, JSON.stringify({
         mode: opts.mode, blockLeaderboard: opts.blockLeaderboard, autoRevive: opts.autoRevive,
-        strength: bot.strength, think: opts.think,
+        reviveStyle: opts.reviveStyle, strength: bot.strength, think: opts.think,
       }));
     } catch { }
   };
@@ -259,15 +268,28 @@ export function createBot(userOpts = {}) {
     return await P.planParallel(w, thinkOpts, makeExec(state, thinkOpts));
   }
 
+  /* 把「复活币打法」翻译成 planner 的两个开关（见 DEFAULTS.reviveStyle 的说明）：
+       aggressive —— 推演里允许用币续命 + 风险项打折（敢在危机时搏一手）
+       conservative —— 推演里不许用币续命（越线即判死）+ 风险项不打折（按没退路来选）
+     ⚠️ 两者都会在真的判负时自动点复活（币是游戏结算的，打法开关不管这个）。 */
+  function thinkWithStyle(base) {
+    const conservative = opts.reviveStyle === 'conservative';
+    const t = { ...base, allowRevive: !conservative };
+    if (conservative) {
+      t.weights = { ...(base.weights || {}), riskScaleWithRevive: 1.0 };
+    }
+    return t;
+  }
+
   function requestPlan() {
     const S = bot.S;
     if (bot.inflight || !S.ready || S.over || !bot.aiEnabled) return;
     const id = ++bot.reqId;
     const snap = E.snapshotOf(S, performance.now());
     bot.inflight = { id, frame: bot.frame, t0: performance.now(), wall: performance.now() };
-    const thinkOpts = bot.driverMode === 'realtime'
+    const thinkOpts = thinkWithStyle(bot.driverMode === 'realtime'
       ? { ...opts.think, latencyFrames: Math.round(bot.avgPlanMs() / 1000 * 60) }
-      : opts.think;
+      : opts.think);
     runPlan(snap, thinkOpts).then(
       (dec) => onPlanResult(id, dec),
       (err) => {
@@ -306,18 +328,58 @@ export function createBot(userOpts = {}) {
     };
   }
 
+  /* ------------------------------------------------------------------------
+   * 「等盘面安静再出手」——投掷时机（2026-10-14 修复）
+   *
+   * 背景：README 第九节 9.3-1 记过这个缺口 —— 时机比较只写在 planner.plan() 里，
+   * 而浏览器走的是 planParallel()，那条路径没有时机逻辑，所以「投掷时机」开关
+   * 一直是摆设（实测 185/185、292/292 全部记为「立刻」）。
+   *
+   * 现在改成在**驱动层**等待：盘面还在动就先不决策，等它安静下来（最多等
+   * maxWaitFrames 帧 ≈ 3 秒游戏时间）再拍板。为什么不是 planner 里「算两遍比较」：
+   *   · 算两遍要付一次完整推演，而「先等再算」只付一次；
+   *   · 实测（tools/judge.mjs，live 协议 = 逐帧对齐浏览器 turbo）：
+   *     等安静在两组独立种子上都是 +2.5%（32 个配对种子，见 README 第十三节）。
+   * 快进模式下等待几乎不花墙钟时间 —— 每手真正花时间的是 Worker 思考（~250ms），
+   * 而等待只是多推 40 来个物理帧（< 10ms）。
+   *
+   * 例外：已经压线（state.danger）就不等 —— 这时候任何拖延都可能直接判负。
+   * ------------------------------------------------------------------------ */
+  let holdFrames = 0, holdStart = 0;
+
+  function shouldHoldForQuiet() {
+    const th = opts.think;
+    if (th.holdForQuiet === false || th.timing === 'now' || bot.driverMode === 'passive') return false;
+    const S = bot.S;
+    if (!S || S.over || S.danger) { holdFrames = 0; holdStart = 0; return false; }
+    const quietSpeed = th.quietSpeed ?? 60;
+    const maxWaitMs = (th.maxWaitFrames ?? 180) * (1000 / 60);
+    if (maxSpeedOfGame() <= quietSpeed) { holdFrames = 0; holdStart = 0; return false; }
+    if (!holdStart) holdStart = performance.now();
+    holdFrames++;
+    const waitedMs = (bot.driverMode === 'turbo') ? holdFrames * (1000 / 60) : (performance.now() - holdStart);
+    if (waitedMs >= maxWaitMs) { holdFrames = 0; holdStart = 0; return false; }   // 等不到就照常出手
+    return true;
+  }
+  function clearHold() { holdFrames = 0; holdStart = 0; }
+
   function planLifecycle() {
     const S = bot.S;
     if (S.over || !bot.aiEnabled) return;
     if (bot.plan && bot.frame >= bot.plan.dropFrame && S.ready) {
       const p = bot.plan;
       bot.plan = null;
+      clearHold();
       if (dropAt(p.x)) {
         bot.stats.drops++;
         if (opts.verbose) say(`#${bot.stats.drops} x=${p.x.toFixed(1)} 时机=${p.choice} 决策${bot.stats.lastPlanMs}ms 分数${S.score}`);
       }
     }
-    if (!bot.plan && !bot.inflight && S.ready) requestPlan();
+    if (!bot.plan && !bot.inflight && S.ready) {
+      if (shouldHoldForQuiet()) { bot.stats.holdFrames = holdFrames; return; }
+      bot.stats.holdFrames = 0;
+      requestPlan();
+    }
   }
 
   /* -------------------------------------------------------- 局面/生命期 --- */
@@ -340,6 +402,7 @@ export function createBot(userOpts = {}) {
   function beginNewGame(reason) {
     const st = bot.stats;
     bot.plan = null; bot.inflight = null;
+    clearHold();
     bot.overHandled = false; bot.awaitingRestart = false;
     st.gameStart = { drop: st.drops, plan: st.planMs, planN: st.planN, revive: st.revivesUsed };
     st.maxTier = 0;
@@ -370,7 +433,9 @@ export function createBot(userOpts = {}) {
   function handleOver() {
     const S = bot.S;
     hookBoard();
-    if (opts.autoRevive && S.revives > 0) {
+    /* 判负就点复活 —— 这与 reviveStyle（打法）无关：币是游戏结算的，
+       不用白不用；reviveStyle 只决定「危机时按不按有退路来选落点」。 */
+    if (opts.autoRevive !== false && S.revives > 0) {
       if (tryRevive()) {
         bot.stats.revivesUsed++;
         bot.overHandled = false;         // 复活成功 → 继续打
@@ -417,12 +482,16 @@ export function createBot(userOpts = {}) {
       if (bot.plan && nowMs >= bot.plan.dropAtMs && S.ready) {
         const p = bot.plan;
         bot.plan = null;
+        clearHold();
         if (dropAt(p.x)) {
           bot.stats.drops++;
           if (opts.verbose) say(`#${bot.stats.drops} x=${p.x.toFixed(1)} 时机=${p.choice} 决策${bot.stats.lastPlanMs}ms 分数${S.score}`);
         }
       }
-      if (!bot.plan && !bot.inflight && S.ready) requestPlan();
+      if (!bot.plan && !bot.inflight && S.ready) {
+        if (shouldHoldForQuiet()) { bot.stats.holdFrames = holdFrames; }
+        else { bot.stats.holdFrames = 0; requestPlan(); }
+      }
     }
     trackStats();
     if (bot.island) bot.island.refresh();

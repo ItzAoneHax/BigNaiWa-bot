@@ -1,0 +1,207 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9200,
+      9201,
+      9202,
+      9203,
+      9204,
+      9205,
+      9206,
+      9207,
+      9208,
+      9209,
+      9210,
+      9211,
+      9212,
+      9213,
+      9214,
+      9215
+    ],
+    "configs": [
+      {
+        "name": "base",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "ply1",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 1,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "wait",
+        "protocol": "wait",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "deep",
+        "think": {
+          "step": 6,
+          "h1": 1.6,
+          "h2": 3.4,
+          "topK": 12,
+          "lookahead": 2,
+          "innerTop": 6,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "topLow",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        },
+        "weights": {
+          "top": 0.8
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9203
+  ],
+  "results": [
+    {
+      "seed": 9203,
+      "name": "base",
+      "protocol": "live",
+      "score": 6441,
+      "drops": 600,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 349,
+        "100": 814,
+        "150": 1406,
+        "200": 1772,
+        "250": 2176,
+        "300": 2958,
+        "350": 3534,
+        "400": 3954,
+        "500": 5467,
+        "600": 6441
+      },
+      "waitAvgFrames": 21.976666666666667,
+      "planMsAvg": 1669.7589036666673,
+      "wallMs": 1002993
+    },
+    {
+      "seed": 9203,
+      "name": "ply1",
+      "protocol": "live",
+      "score": 1999,
+      "drops": 233,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 1,
+      "ended": "over",
+      "marks": {
+        "50": 364,
+        "100": 774,
+        "150": 1142,
+        "200": 1663
+      },
+      "waitAvgFrames": 21.92274678111588,
+      "planMsAvg": 620.2846330472105,
+      "wallMs": 145278
+    },
+    {
+      "seed": 9203,
+      "name": "wait",
+      "protocol": "wait",
+      "score": 2528,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 352,
+        "100": 857,
+        "150": 1215,
+        "200": 1850,
+        "250": 2528
+      },
+      "waitAvgFrames": 64.664,
+      "planMsAvg": 1207.0760463999998,
+      "wallMs": 302805
+    },
+    {
+      "seed": 9203,
+      "name": "deep",
+      "protocol": "live",
+      "score": 2416,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 349,
+        "100": 986,
+        "150": 1441,
+        "200": 1800,
+        "250": 2416
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1833.9192703999956,
+      "wallMs": 458750
+    },
+    {
+      "seed": 9203,
+      "name": "topLow",
+      "protocol": "live",
+      "score": 2443,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 349,
+        "100": 939,
+        "150": 1428,
+        "200": 1788,
+        "250": 2443
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 975.9426571999966,
+      "wallMs": 244285
+    }
+  ]
+}

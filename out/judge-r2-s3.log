@@ -1,0 +1,6 @@
+seed=9203 base                 score= 6441 drops= 600 max= 9 rev=0 wait=22.0f cap 1003s
+seed=9203 ply1                 score= 1999 drops= 233 max= 9 rev=0 wait=21.9f over 145s
+seed=9203 wait                 score= 2528 drops= 250 max=10 rev=0 wait=64.7f cap 303s
+seed=9203 deep                 score= 2416 drops= 250 max=10 rev=0 wait=21.9f cap 459s
+seed=9203 topLow               score= 2443 drops= 250 max=10 rev=0 wait=21.9f cap 244s
+wrote C:\Users\limin\IdeaProjects\BigNaiWa-bot\out\judge-r2-s3.json

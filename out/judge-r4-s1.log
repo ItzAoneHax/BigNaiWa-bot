@@ -1,0 +1,6 @@
+seed=9501 base                 score= 2242 drops= 250 max= 9 rev=0 wait=21.9f cap 423s
+seed=9501 flat40               score= 2433 drops= 250 max=10 rev=0 wait=21.9f cap 432s
+seed=9501 pool100              score= 2486 drops= 250 max=10 rev=0 wait=21.9f cap 322s
+seed=9501 ground800            score= 2223 drops= 250 max= 9 rev=0 wait=21.9f cap 537s
+seed=9501 mono6000             score= 2283 drops= 250 max= 9 rev=1 wait=21.8f cap 376s
+wrote C:\Users\limin\IdeaProjects\BigNaiWa-bot\out\judge-r4-s1.json

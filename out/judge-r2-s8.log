@@ -1,0 +1,4 @@
+seed=9208 base                 score= 4205 drops= 467 max=10 rev=2 wait=21.9f over 918s
+seed=9208 ply1                 score= 2262 drops= 250 max= 9 rev=0 wait=21.9f cap 89s
+seed=9208 wait                 score= 2167 drops= 250 max= 9 rev=0 wait=57.8f cap 404s
+seed=9208 deep                 score= 2206 drops= 250 max= 9 rev=0 wait=21.9f cap 645s

@@ -1,0 +1,148 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9600,
+      9601,
+      9602,
+      9603,
+      9604,
+      9605,
+      9606,
+      9607,
+      9608,
+      9609,
+      9610,
+      9611,
+      9612,
+      9613,
+      9614,
+      9615
+    ],
+    "configs": [
+      {
+        "name": "aggressive",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "conservative",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "allowRevive": false
+        },
+        "weights": {
+          "riskScaleWithRevive": 1
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9603
+  ],
+  "results": [
+    {
+      "seed": 9603,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2123,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 307,
+        "100": 721,
+        "150": 1090,
+        "200": 1504,
+        "250": 2123
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 11
+        },
+        "100": {
+          "top": 57,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 43,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1611.4956104000014,
+      "wallMs": 403336
+    },
+    {
+      "seed": 9603,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2109,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 307,
+        "100": 721,
+        "150": 1090,
+        "200": 1504,
+        "250": 2109
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 11
+        },
+        "100": {
+          "top": 57,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 43,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1634.8425959999988,
+      "wallMs": 409181
+    }
+  ]
+}

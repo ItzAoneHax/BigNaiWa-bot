@@ -1,0 +1,32 @@
+[shard 13] 完成 code=0 (1/16)
+[shard 12] 完成 code=0 (2/16)
+[shard 9] 完成 code=0 (3/16)
+[shard 6] 完成 code=0 (4/16)
+[shard 1] 完成 code=0 (5/16)
+[shard 11] 完成 code=0 (6/16)
+[shard 0] 完成 code=0 (7/16)
+[shard 2] 完成 code=0 (8/16)
+[shard 10] 完成 code=0 (9/16)
+[shard 8] 完成 code=0 (10/16)
+[shard 3] 完成 code=0 (11/16)
+[shard 7] 完成 code=0 (12/16)
+[shard 5] 完成 code=0 (13/16)
+[shard 15] 完成 code=0 (14/16)
+[shard 4] 完成 code=0 (15/16)
+[shard 14] 完成 code=0 (16/16)
+
+================ 结果 ================
+配置                       n      平均分      中位     最低     最高     平均手数      场均耗时   cap率
+aggressive              16   2204.6    2179   1931   2408      250       368   100%
+conservative            16   2211.4    2175   2038   2454      250       360   100%
+
+---------------- 配对差（vs aggressive） ----------------
+配置                       n       平均差                95%CI        胜负       相对
+conservative            16 +     6.8            [-41, 55]      8胜8负     0.3%
+
+---------------- 第 N 手时的分数（消除存活时长差异） ----------------
+配置                          #50     #100     #150     #200     #250
+aggressive                  333      796     1243     1702     2205
+conservative                333      796     1243     1702     2211
+
+结果已写入 C:\Users\limin\IdeaProjects\BigNaiWa-bot\out\judge-r5-2026-10-14T05-51-04.json

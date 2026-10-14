@@ -951,6 +951,11 @@ const DEFAULT_WEIGHTS = {
   bigHigh: 0.80,   // 大果被顶到高处
   buried:  0.60,   // 大果压小果（被埋的小果就废了）
   frag:    0.25,   // 碎块惩罚
+  /* 形状 / 长期位置（2026-10-14 新增，默认全 0 = 完全不参与，见 features() 的说明）：
+     flat   柱子凸出（罚）· pool 工作面还剩多宽（奖）· ground 大果沉底（奖） */
+  flat:    0.00,
+  pool:    0.00,
+  ground:  0.00,
   /* 用户反馈的两项「长久受益」（默认关闭，用 tools/tune.mjs 验证过才开）：
      stuck —— 底部堆着没有同级伙伴的大果（占地方又合不掉）
      space —— 这一手合成释放掉的空间（大果收益随半径平方增长） */
@@ -1100,11 +1105,62 @@ function features(w) {
     if (!partner) stuck += (a.r / 100) * (a.r / 100);
   }
 
+  /* ------------------------------------------------------------------------
+   *  形状 / 长期位置（2026-10-14 新增；权重默认 0 —— 不开时一个比特都不变）
+   *
+   *  动机是 README 第十三节的解剖结果：**52.5% 的手，前 8 名候选的评估值完全
+   *  并列**（极差 ≤0.5）。并列大多出现在盘面还稀疏的时候 —— 那些落点在 2.6 秒
+   *  窗口内确实等价，可是它们把水果放在左边/右边/中间，对**几十手之后**的形状
+   *  影响完全不同，而这件事在评估函数里过去权重为零。
+   *
+   *  三项各管一件事：
+   *    flat  —— 有没有「柱子」凸出来。判负看的就是最高那一颗，所以把"比平均
+   *             高出一截的柱"按平方罚。（与 bump 的区别：bump 罚的是斜率，一个
+   *             平缓的斜坡 bump 很大却一点都不危险。）
+   *    pool  —— 工作面还剩多少、而且是"整片都还剩"。取每列可用高度（堆顶到
+   *             警戒线）的截断平均。它比 top 温和得多（top 只看全局最高点，
+   *             压线时无上限放大），给中前期的"布局够不够宽"一个有梯度的信号。
+   *    ground—— 大质量有没有沉底。大果停在底层 = 上面留给可操作的小果；
+   *             大果悬在中间 = 既挡路又随时会被顶到线上。按 (r/100)³ 计权，
+   *             所以它关心的是「半奶蛙/神奶蛙在哪」，而不是葡萄在哪。
+   * ---------------------------------------------------------------------- */
+  let meanTop = 0, nCol = 0;
+  for (let k = 0; k < N_BINS; k++) {
+    if (profile[k] < H - WALL) { meanTop += profile[k]; nCol++; }
+  }
+  meanTop = nCol ? meanTop / nCol : H - WALL;
+
+  let flat = 0;
+  for (let k = 0; k < N_BINS; k++) {
+    const d = meanTop - profile[k];          // >0 = 这一列比平均高
+    if (d > 0) flat += d * d;
+  }
+  flat = flat / (N_BINS * 2500);             // 一根高出平均 50px 的柱子 ≈ 0.125
+
+  let pool = 0;
+  for (let k = 0; k < N_BINS; k++) {
+    const free = profile[k] - E.CFG.DANGER_Y;
+    pool += free <= 0 ? 0 : Math.min(1, free / 220);
+  }
+  pool = pool / N_BINS;
+
+  let ground = 0;
+  const floorY = H - WALL;
+  for (let i = 0; i < n; i++) {
+    const b = balls[i];
+    if (b.dead) continue;
+    const depth = (floorY - (b.y + b.r)) / floorY;     // 0 = 贴着底板
+    const wBig = b.r / 100;
+    ground += wBig * wBig * wBig * Math.max(0, 1 - depth);
+  }
+  ground = ground / 3;
+
   return {
     n, top, above, aboveMass, buried: buried / 10,
     bigPair: bigPair / 12,
     blocked: blocked / 12,
     stuck: stuck / 4,
+    flat, pool, ground,
     /* 本轮推演里合成「释放掉的面积」：两颗消失、一颗更大的顶上，净腾出来的空间。
        加大果的收益随半径平方增长 —— 合掉两只半奶蛙腾出的地方，是合掉两颗葡萄的 160 倍。 */
     space: (w.freed || 0) / 10000,
@@ -1153,6 +1209,11 @@ function evaluate(w, before, wt = DEFAULT_WEIGHTS) {
      space 直接奖励「这一手腾出了多少地方」，大果的收益随半径平方增长，
      所以它会把「合掉两只半奶蛙」排在「多拿 45 分」前面。 */
   v -= (wt.stuck || 0) * f.stuck;
+  /* 形状 / 长期位置三项（默认全 0，见 features() 里的说明）。
+     flat 是罚项（柱子），pool / ground 是奖项（工作面宽、大果沉底）。 */
+  v -= (wt.flat || 0) * f.flat;
+  v += (wt.pool || 0) * f.pool;
+  v += (wt.ground || 0) * f.ground;
   if (wt.space) v += wt.space * f.space;
   return v;
 }
@@ -1296,13 +1357,14 @@ function runSettle(w, h, quiet, allowRevive = true) {
   return n;
 }
 
-/* 推演一次投放 → 返回评估值 */
-function rolloutValue(src, x, h, wt, scratch, quiet) {
+/* 推演一次投放 → 返回评估值。
+   allowRevive=false 表示「推演里不许用币续命」= 越线就直接判死（保守打法用）。 */
+function rolloutValue(src, x, h, wt, scratch, quiet, allowRevive = true) {
   const sim = E.cloneWorld(src, scratch);
   sim.mergedMaxTier = -1; sim.freed = 0;
   const before = sim.score;
   E.dropAt(sim, x);          // 若 !ready 会失败 → 调用方保证 ready
-  runSettle(sim, h, quiet);
+  runSettle(sim, h, quiet, allowRevive);
   const v = evaluate(sim, before, wt);
   return { v, sim, gain: sim.score - before };
 }
@@ -1322,7 +1384,7 @@ function stageScreen(world, opts, xs, ctx) {
   const st = stageCtx(world, opts, ctx);
   const out = new Array(xs.length);
   for (let i = 0; i < xs.length; i++) {
-    const o = rolloutValue(world, xs[i], st.h1, st.wt, st.scratch, st.quiet);
+    const o = rolloutValue(world, xs[i], st.h1, st.wt, st.scratch, st.quiet, st.allowRevive);
     out[i] = { x: xs[i], v1: o.v };
   }
   return out;
@@ -1333,7 +1395,7 @@ function stageLong(world, opts, xs, ctx) {
   const st = stageCtx(world, opts, ctx);
   const out = new Array(xs.length);
   for (let i = 0; i < xs.length; i++) {
-    const o = rolloutValue(world, xs[i], st.h2, st.wt, st.scratch, st.quiet + 0.6);
+    const o = rolloutValue(world, xs[i], st.h2, st.wt, st.scratch, st.quiet + 0.6, st.allowRevive);
     out[i] = { x: xs[i], v2: o.v, gain: o.gain, top: E.stackTop(o.sim) };
   }
   return out;
@@ -1404,7 +1466,7 @@ function stageInner(world, opts, items, ctx) {
     s2.mergedMaxTier = -1; s2.freed = 0;
     const b2 = s2.score;
     E.dropAt(s2, it.x2);
-    runSettle(s2, innerH, 0.7);
+    runSettle(s2, innerH, 0.7, st.allowRevive);
     out[i] = evaluate(s2, b2, st.wt);
   }
   return out;
@@ -1422,7 +1484,7 @@ function stageRecheck(world, opts, items, ctx) {
     s3.mergedMaxTier = -1; s3.freed = 0;
     const b3 = s3.score;
     E.dropAt(s3, it.x2);
-    runSettle(s3, st.h2, 1.2);
+    runSettle(s3, st.h2, 1.2, st.allowRevive);
     out[i] = evaluate(s3, b3, st.wt);
   }
   return out;
@@ -1488,7 +1550,7 @@ function stageRefine(world, opts, xs, ctx) {
   const st = stageCtx(world, opts, ctx);
   const out = new Array(xs.length);
   for (let i = 0; i < xs.length; i++) {
-    const o = rolloutValue(world, xs[i], st.h2, st.wt, st.scratch, st.quiet + 0.6);
+    const o = rolloutValue(world, xs[i], st.h2, st.wt, st.scratch, st.quiet + 0.6, st.allowRevive);
     out[i] = { x: xs[i], v: o.v };
   }
   return out;
@@ -1506,6 +1568,9 @@ function stageCtx(world, opts, ctx) {
     h1: opts.h1 ?? 1.2,
     h2: opts.h2 ?? 2.6,
     quiet: opts.quiet ?? 0.9,
+    /* 推演里允不允许用复活币续命。allowRevive:false = 保守打法：
+       越线就直接判死（dead 一票否决），不把"反正有币"算进落点价值。 */
+    allowRevive: opts.allowRevive !== false,
     scratch: (ctx && ctx.scratch) || E.makeWorld({ rng: world.rng }),
   };
 }

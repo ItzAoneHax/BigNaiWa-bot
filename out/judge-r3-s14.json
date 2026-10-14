@@ -1,0 +1,149 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9300,
+      9301,
+      9302,
+      9303,
+      9304,
+      9305,
+      9306,
+      9307,
+      9308,
+      9309,
+      9310,
+      9311,
+      9312,
+      9313,
+      9314,
+      9315,
+      9316,
+      9317,
+      9318,
+      9319
+    ],
+    "configs": [
+      {
+        "name": "base",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "wait",
+        "protocol": "wait",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9314
+  ],
+  "results": [
+    {
+      "seed": 9314,
+      "name": "base",
+      "protocol": "live",
+      "score": 2093,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 286,
+        "100": 773,
+        "150": 1073,
+        "200": 1638,
+        "250": 2093
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 13
+        },
+        "100": {
+          "top": 57,
+          "n": 14
+        },
+        "150": {
+          "top": 9,
+          "n": 21
+        },
+        "200": {
+          "top": 43,
+          "n": 21
+        },
+        "250": {
+          "top": 51,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1700.9740955999978,
+      "wallMs": 425746
+    },
+    {
+      "seed": 9314,
+      "name": "wait",
+      "protocol": "wait",
+      "score": 2232,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 361,
+        "100": 819,
+        "150": 1329,
+        "200": 1772,
+        "250": 2232
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 8
+        },
+        "100": {
+          "top": 57,
+          "n": 9
+        },
+        "150": {
+          "top": 35,
+          "n": 7
+        },
+        "200": {
+          "top": 43,
+          "n": 10
+        },
+        "250": {
+          "top": 51,
+          "n": 13
+        }
+      },
+      "waitAvgFrames": 66.404,
+      "planMsAvg": 696.3688159999994,
+      "wallMs": 174645
+    }
+  ]
+}

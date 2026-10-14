@@ -1,0 +1,23 @@
+盘面 #80（11颗 630分，候选 42）：未来 6 手净得 10~110 分
+   v=-0.05  gain=-0.05  flat=+0.03  pool=+0.06  ground=+0.17  bump=+0.16  mono=+0.14  adj=+0.10  bigPair=+0.00  blocked=+0.00  bigHigh=+0.00  buried=-0.25  topRisk2=+0.00  n=+0.05
+盘面 #160（17颗 1435分，候选 45）：未来 6 手净得 0~166 分
+   v=-0.22  gain=-0.28  flat=+0.01  pool=-0.26  ground=-0.26  bump=-0.16  mono=-0.22  adj=-0.11  bigPair=-0.16  blocked=+0.04  bigHigh=+0.08  buried=+0.28  topRisk2=+0.21  n=+0.28
+盘面 #240（22颗 2075分，候选 40）：未来 6 手净得 0~61 分
+   v=+0.15  gain=-0.07  flat=-0.22  pool=+0.02  ground=+0.19  bump=-0.25  mono=+0.35  adj=+0.08  bigPair=-0.03  blocked=-0.01  bigHigh=-0.26  buried=-0.09  topRisk2=-0.16  n=+0.07
+
+各特征与「未来 6 手净得分」的相关（中位数，跨 3 个盘面 / 共 127 个候选）
+特征            Pearson   Spearman  解读
+ground          0.171     -0.054  
+bump           -0.160     -0.117  
+mono            0.143      0.188  
+buried         -0.092      0.102  
+adj             0.082      0.031  
+gain           -0.065     -0.114  ← 窗口内合成分
+n               0.065      0.119  ← 球数
+v              -0.053      0.142  ← 现在用的评估值
+bigPair        -0.028     -0.101  
+pool            0.022     -0.065  
+flat            0.014     -0.144  
+blocked         0.000      0.130  
+bigHigh         0.000     -0.063  
+topRisk2        0.000     -0.063  

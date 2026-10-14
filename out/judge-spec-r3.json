@@ -1,0 +1,16 @@
+{
+  "protocol": "live",
+  "maxDrops": 250,
+  "seeds": [9300, 9301, 9302, 9303, 9304, 9305, 9306, 9307, 9308, 9309, 9310, 9311, 9312, 9313, 9314, 9315, 9316, 9317, 9318, 9319],
+  "configs": [
+    {
+      "name": "base",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" }
+    },
+    {
+      "name": "wait",
+      "protocol": "wait",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known" }
+    }
+  ]
+}

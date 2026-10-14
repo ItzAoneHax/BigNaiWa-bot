@@ -1,0 +1,4 @@
+seed=9200 base                 score= 6065 drops= 600 max= 8 rev=1 wait=22.0f cap 915s
+seed=9200 ply1                 score= 2039 drops= 250 max= 9 rev=0 wait=21.9f cap 80s
+seed=9200 wait                 score= 2185 drops= 250 max= 9 rev=1 wait=61.5f cap 336s
+seed=9200 deep                 score= 2083 drops= 250 max= 9 rev=0 wait=21.9f cap 714s

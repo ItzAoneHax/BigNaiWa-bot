@@ -1,0 +1,1487 @@
+{
+  "tag": "r5",
+  "protocol": "live",
+  "maxDrops": 250,
+  "spec": {
+    "protocol": "live",
+    "maxDrops": 250,
+    "seeds": [
+      9600,
+      9601,
+      9602,
+      9603,
+      9604,
+      9605,
+      9606,
+      9607,
+      9608,
+      9609,
+      9610,
+      9611,
+      9612,
+      9613,
+      9614,
+      9615
+    ],
+    "configs": [
+      {
+        "name": "aggressive",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known"
+        }
+      },
+      {
+        "name": "conservative",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "allowRevive": false
+        },
+        "weights": {
+          "riskScaleWithRevive": 1
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9600,
+    9601,
+    9602,
+    9603,
+    9604,
+    9605,
+    9606,
+    9607,
+    9608,
+    9609,
+    9610,
+    9611,
+    9612,
+    9613,
+    9614,
+    9615
+  ],
+  "summary": [
+    {
+      "name": "aggressive",
+      "n": 16,
+      "avg": 2204.625,
+      "median": 2179,
+      "avgDrops": 250,
+      "capRate": 1,
+      "avgPlanMs": 1469.5038656749996
+    },
+    {
+      "name": "conservative",
+      "n": 16,
+      "avg": 2211.375,
+      "median": 2175,
+      "avgDrops": 250,
+      "capRate": 1,
+      "avgPlanMs": 1439.9116085749995
+    }
+  ],
+  "paired": [
+    {
+      "name": "conservative",
+      "n": 16,
+      "meanDiff": 6.75,
+      "sdDiff": 101.52076963196579,
+      "lo": -41,
+      "hi": 54.9375,
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "meanOther": 2211.375
+    }
+  ],
+  "results": [
+    {
+      "seed": 9613,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2260,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 341,
+        "100": 793,
+        "150": 1279,
+        "200": 1750,
+        "250": 2260
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 10
+        },
+        "100": {
+          "top": 35,
+          "n": 13
+        },
+        "150": {
+          "top": 35,
+          "n": 14
+        },
+        "200": {
+          "top": 35,
+          "n": 21
+        },
+        "250": {
+          "top": 35,
+          "n": 21
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1104.0878112,
+      "wallMs": 276355
+    },
+    {
+      "seed": 9613,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2375,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 1,
+      "deaths": 1,
+      "ended": "cap",
+      "marks": {
+        "50": 341,
+        "100": 793,
+        "150": 1279,
+        "200": 1750,
+        "250": 2375
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 10
+        },
+        "100": {
+          "top": 35,
+          "n": 13
+        },
+        "150": {
+          "top": 35,
+          "n": 14
+        },
+        "200": {
+          "top": 35,
+          "n": 21
+        },
+        "250": {
+          "top": 35,
+          "n": 12
+        }
+      },
+      "waitAvgFrames": 21.88,
+      "planMsAvg": 1145.929360800002,
+      "wallMs": 286835
+    },
+    {
+      "seed": 9612,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2133,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 345,
+        "100": 967,
+        "150": 1301,
+        "200": 1648,
+        "250": 2133
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 13
+        },
+        "100": {
+          "top": 35,
+          "n": 9
+        },
+        "150": {
+          "top": 35,
+          "n": 11
+        },
+        "200": {
+          "top": 35,
+          "n": 25
+        },
+        "250": {
+          "top": 26,
+          "n": 25
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1187.3257944,
+      "wallMs": 297183
+    },
+    {
+      "seed": 9612,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2054,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 345,
+        "100": 967,
+        "150": 1301,
+        "200": 1648,
+        "250": 2054
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 13
+        },
+        "100": {
+          "top": 35,
+          "n": 9
+        },
+        "150": {
+          "top": 35,
+          "n": 11
+        },
+        "200": {
+          "top": 35,
+          "n": 25
+        },
+        "250": {
+          "top": 26,
+          "n": 31
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1219.3408500000007,
+      "wallMs": 305195
+    },
+    {
+      "seed": 9609,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2176,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 367,
+        "100": 785,
+        "150": 1255,
+        "200": 1759,
+        "250": 2176
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 8
+        },
+        "100": {
+          "top": 43,
+          "n": 14
+        },
+        "150": {
+          "top": 43,
+          "n": 18
+        },
+        "200": {
+          "top": 43,
+          "n": 19
+        },
+        "250": {
+          "top": 35,
+          "n": 25
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1201.2816231999996,
+      "wallMs": 300638
+    },
+    {
+      "seed": 9609,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2175,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 367,
+        "100": 785,
+        "150": 1255,
+        "200": 1759,
+        "250": 2175
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 8
+        },
+        "100": {
+          "top": 43,
+          "n": 14
+        },
+        "150": {
+          "top": 43,
+          "n": 18
+        },
+        "200": {
+          "top": 43,
+          "n": 19
+        },
+        "250": {
+          "top": 35,
+          "n": 26
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1222.4364139999998,
+      "wallMs": 305932
+    },
+    {
+      "seed": 9606,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2397,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 335,
+        "100": 705,
+        "150": 1121,
+        "200": 1741,
+        "250": 2397
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 11
+        },
+        "100": {
+          "top": 43,
+          "n": 19
+        },
+        "150": {
+          "top": 43,
+          "n": 21
+        },
+        "200": {
+          "top": 26,
+          "n": 18
+        },
+        "250": {
+          "top": 35,
+          "n": 15
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1205.6175771999992,
+      "wallMs": 301772
+    },
+    {
+      "seed": 9606,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2155,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 335,
+        "100": 705,
+        "150": 1121,
+        "200": 1741,
+        "250": 2155
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 11
+        },
+        "100": {
+          "top": 43,
+          "n": 19
+        },
+        "150": {
+          "top": 43,
+          "n": 21
+        },
+        "200": {
+          "top": 26,
+          "n": 18
+        },
+        "250": {
+          "top": 35,
+          "n": 27
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1384.7085843999994,
+      "wallMs": 346594
+    },
+    {
+      "seed": 9601,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2294,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 287,
+        "100": 770,
+        "150": 1300,
+        "200": 1680,
+        "250": 2294
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 9
+        },
+        "100": {
+          "top": 26,
+          "n": 12
+        },
+        "150": {
+          "top": 43,
+          "n": 15
+        },
+        "200": {
+          "top": 57,
+          "n": 22
+        },
+        "250": {
+          "top": 43,
+          "n": 19
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1326.3187635999993,
+      "wallMs": 331992
+    },
+    {
+      "seed": 9601,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2332,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 287,
+        "100": 770,
+        "150": 1300,
+        "200": 1680,
+        "250": 2332
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 9
+        },
+        "100": {
+          "top": 26,
+          "n": 12
+        },
+        "150": {
+          "top": 43,
+          "n": 15
+        },
+        "200": {
+          "top": 57,
+          "n": 22
+        },
+        "250": {
+          "top": 43,
+          "n": 15
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1266.966315599998,
+      "wallMs": 317130
+    },
+    {
+      "seed": 9611,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2169,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 321,
+        "100": 801,
+        "150": 1277,
+        "200": 1677,
+        "250": 2169
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 14
+        },
+        "150": {
+          "top": 26,
+          "n": 19
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 35,
+          "n": 25
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1359.2898892000007,
+      "wallMs": 340236
+    },
+    {
+      "seed": 9611,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2174,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 321,
+        "100": 801,
+        "150": 1277,
+        "200": 1677,
+        "250": 2174
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 14
+        },
+        "150": {
+          "top": 26,
+          "n": 19
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 35,
+          "n": 28
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1419.0455128000015,
+      "wallMs": 355198
+    },
+    {
+      "seed": 9600,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2123,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 351,
+        "100": 842,
+        "150": 1356,
+        "200": 1753,
+        "250": 2123
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 9
+        },
+        "100": {
+          "top": 51,
+          "n": 10
+        },
+        "150": {
+          "top": 19,
+          "n": 9
+        },
+        "200": {
+          "top": 26,
+          "n": 19
+        },
+        "250": {
+          "top": 57,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1352.3148447999997,
+      "wallMs": 338476
+    },
+    {
+      "seed": 9600,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2038,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 351,
+        "100": 842,
+        "150": 1356,
+        "200": 1753,
+        "250": 2038
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 9
+        },
+        "100": {
+          "top": 51,
+          "n": 10
+        },
+        "150": {
+          "top": 19,
+          "n": 9
+        },
+        "200": {
+          "top": 26,
+          "n": 19
+        },
+        "250": {
+          "top": 20,
+          "n": 32
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1548.8447459999993,
+      "wallMs": 387653
+    },
+    {
+      "seed": 9602,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2381,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 331,
+        "100": 821,
+        "150": 1263,
+        "200": 1810,
+        "250": 2381
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 16
+        },
+        "100": {
+          "top": 26,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 35,
+          "n": 27
+        },
+        "250": {
+          "top": 26,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1449.9433004,
+      "wallMs": 362962
+    },
+    {
+      "seed": 9602,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2454,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 331,
+        "100": 821,
+        "150": 1263,
+        "200": 1810,
+        "250": 2454
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 16
+        },
+        "100": {
+          "top": 26,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 35,
+          "n": 27
+        },
+        "250": {
+          "top": 26,
+          "n": 16
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1485.9261752000011,
+      "wallMs": 371971
+    },
+    {
+      "seed": 9610,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2337,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 335,
+        "100": 792,
+        "150": 1309,
+        "200": 1694,
+        "250": 2337
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 10
+        },
+        "100": {
+          "top": 0,
+          "n": 15
+        },
+        "150": {
+          "top": 51,
+          "n": 18
+        },
+        "200": {
+          "top": 57,
+          "n": 26
+        },
+        "250": {
+          "top": 51,
+          "n": 17
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1469.4302596000005,
+      "wallMs": 367810
+    },
+    {
+      "seed": 9610,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2295,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 335,
+        "100": 792,
+        "150": 1309,
+        "200": 1694,
+        "250": 2295
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 10
+        },
+        "100": {
+          "top": 0,
+          "n": 15
+        },
+        "150": {
+          "top": 51,
+          "n": 18
+        },
+        "200": {
+          "top": 57,
+          "n": 26
+        },
+        "250": {
+          "top": 51,
+          "n": 21
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1575.1729924000012,
+      "wallMs": 394280
+    },
+    {
+      "seed": 9608,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 1931,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 318,
+        "100": 815,
+        "150": 1255,
+        "200": 1658,
+        "250": 1931
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 9
+        },
+        "100": {
+          "top": 51,
+          "n": 10
+        },
+        "150": {
+          "top": 43,
+          "n": 14
+        },
+        "200": {
+          "top": 35,
+          "n": 23
+        },
+        "250": {
+          "top": 57,
+          "n": 36
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1523.0102187999998,
+      "wallMs": 381171
+    },
+    {
+      "seed": 9608,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2098,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 318,
+        "100": 815,
+        "150": 1255,
+        "200": 1658,
+        "250": 2098
+      },
+      "board": {
+        "50": {
+          "top": 43,
+          "n": 9
+        },
+        "100": {
+          "top": 51,
+          "n": 10
+        },
+        "150": {
+          "top": 43,
+          "n": 14
+        },
+        "200": {
+          "top": 35,
+          "n": 23
+        },
+        "250": {
+          "top": 30,
+          "n": 22
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1595.9079843999973,
+      "wallMs": 399417
+    },
+    {
+      "seed": 9603,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2123,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 307,
+        "100": 721,
+        "150": 1090,
+        "200": 1504,
+        "250": 2123
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 11
+        },
+        "100": {
+          "top": 57,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 43,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1611.4956104000014,
+      "wallMs": 403336
+    },
+    {
+      "seed": 9603,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2109,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 307,
+        "100": 721,
+        "150": 1090,
+        "200": 1504,
+        "250": 2109
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 11
+        },
+        "100": {
+          "top": 57,
+          "n": 13
+        },
+        "150": {
+          "top": 51,
+          "n": 23
+        },
+        "200": {
+          "top": 26,
+          "n": 26
+        },
+        "250": {
+          "top": 43,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1634.8425959999988,
+      "wallMs": 409181
+    },
+    {
+      "seed": 9607,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2062,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 341,
+        "100": 804,
+        "150": 1169,
+        "200": 1759,
+        "250": 2062
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 14
+        },
+        "100": {
+          "top": 26,
+          "n": 20
+        },
+        "150": {
+          "top": 43,
+          "n": 29
+        },
+        "200": {
+          "top": 57,
+          "n": 21
+        },
+        "250": {
+          "top": 26,
+          "n": 32
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1956.1198779999993,
+      "wallMs": 489617
+    },
+    {
+      "seed": 9607,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2096,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 341,
+        "100": 804,
+        "150": 1169,
+        "200": 1759,
+        "250": 2096
+      },
+      "board": {
+        "50": {
+          "top": 57,
+          "n": 14
+        },
+        "100": {
+          "top": 26,
+          "n": 20
+        },
+        "150": {
+          "top": 43,
+          "n": 29
+        },
+        "200": {
+          "top": 57,
+          "n": 21
+        },
+        "250": {
+          "top": 26,
+          "n": 28
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1776.023943999995,
+      "wallMs": 444547
+    },
+    {
+      "seed": 9605,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2202,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 367,
+        "100": 740,
+        "150": 1174,
+        "200": 1657,
+        "250": 2202
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 17
+        },
+        "150": {
+          "top": 51,
+          "n": 21
+        },
+        "200": {
+          "top": 57,
+          "n": 26
+        },
+        "250": {
+          "top": 51,
+          "n": 22
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2000.2083051999996,
+      "wallMs": 500719
+    },
+    {
+      "seed": 9605,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2190,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 367,
+        "100": 740,
+        "150": 1174,
+        "200": 1657,
+        "250": 2190
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 17
+        },
+        "150": {
+          "top": 51,
+          "n": 21
+        },
+        "200": {
+          "top": 57,
+          "n": 26
+        },
+        "250": {
+          "top": 51,
+          "n": 23
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1819.190642400002,
+      "wallMs": 455416
+    },
+    {
+      "seed": 9615,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2408,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 327,
+        "100": 748,
+        "150": 1268,
+        "200": 1772,
+        "250": 2408
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 9
+        },
+        "100": {
+          "top": 26,
+          "n": 15
+        },
+        "150": {
+          "top": 51,
+          "n": 15
+        },
+        "200": {
+          "top": 51,
+          "n": 15
+        },
+        "250": {
+          "top": 51,
+          "n": 12
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1005.7737972,
+      "wallMs": 251752
+    },
+    {
+      "seed": 9615,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2341,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 327,
+        "100": 748,
+        "150": 1268,
+        "200": 1772,
+        "250": 2341
+      },
+      "board": {
+        "50": {
+          "top": 51,
+          "n": 9
+        },
+        "100": {
+          "top": 26,
+          "n": 15
+        },
+        "150": {
+          "top": 51,
+          "n": 15
+        },
+        "200": {
+          "top": 51,
+          "n": 15
+        },
+        "250": {
+          "top": 51,
+          "n": 17
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 926.0963559999979,
+      "wallMs": 231808
+    },
+    {
+      "seed": 9604,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2099,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 314,
+        "100": 832,
+        "150": 1150,
+        "200": 1559,
+        "250": 2099
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 13
+        },
+        "100": {
+          "top": 43,
+          "n": 11
+        },
+        "150": {
+          "top": 35,
+          "n": 23
+        },
+        "200": {
+          "top": 57,
+          "n": 30
+        },
+        "250": {
+          "top": 35,
+          "n": 34
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2404.708772000001,
+      "wallMs": 601839
+    },
+    {
+      "seed": 9604,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2164,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 314,
+        "100": 832,
+        "150": 1150,
+        "200": 1559,
+        "250": 2164
+      },
+      "board": {
+        "50": {
+          "top": 35,
+          "n": 13
+        },
+        "100": {
+          "top": 43,
+          "n": 11
+        },
+        "150": {
+          "top": 35,
+          "n": 23
+        },
+        "200": {
+          "top": 57,
+          "n": 30
+        },
+        "250": {
+          "top": 35,
+          "n": 24
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 2053.803466799998,
+      "wallMs": 514028
+    },
+    {
+      "seed": 9614,
+      "name": "aggressive",
+      "protocol": "live",
+      "score": 2179,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 344,
+        "100": 798,
+        "150": 1320,
+        "200": 1816,
+        "250": 2179
+      },
+      "board": {
+        "50": {
+          "top": 26,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 15
+        },
+        "150": {
+          "top": 35,
+          "n": 17
+        },
+        "200": {
+          "top": 43,
+          "n": 19
+        },
+        "250": {
+          "top": 35,
+          "n": 26
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 1355.1354055999996,
+      "wallMs": 339149
+    },
+    {
+      "seed": 9614,
+      "name": "conservative",
+      "protocol": "live",
+      "score": 2332,
+      "drops": 250,
+      "maxTier": 10,
+      "revives": 0,
+      "deaths": 0,
+      "ended": "cap",
+      "marks": {
+        "50": 344,
+        "100": 798,
+        "150": 1320,
+        "200": 1816,
+        "250": 2332
+      },
+      "board": {
+        "50": {
+          "top": 26,
+          "n": 10
+        },
+        "100": {
+          "top": 51,
+          "n": 15
+        },
+        "150": {
+          "top": 35,
+          "n": 17
+        },
+        "200": {
+          "top": 43,
+          "n": 19
+        },
+        "250": {
+          "top": 35,
+          "n": 21
+        }
+      },
+      "waitAvgFrames": 21.912,
+      "planMsAvg": 964.3497964000011,
+      "wallMs": 241354
+    }
+  ]
+}
