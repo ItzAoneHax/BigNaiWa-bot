@@ -1,0 +1,12 @@
+{
+  "protocol": "auto",
+  "maxDrops": 1200,
+  "seeds": [9900, 9901, 9902, 9903, 9904, 9905, 9906, 9907, 9908, 9909],
+  "configs": [
+    {
+      "name": "space600",
+      "think": { "step": 8, "h1": 1.2, "h2": 2.6, "topK": 8, "lookahead": 2, "innerTop": 4, "nextMode": "known", "timing": "auto" },
+      "weights": { "space": 600 }
+    }
+  ]
+}

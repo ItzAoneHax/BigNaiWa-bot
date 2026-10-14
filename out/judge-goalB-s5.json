@@ -1,0 +1,184 @@
+{
+  "protocol": "auto",
+  "maxDrops": 1200,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "auto",
+    "maxDrops": 1200,
+    "seeds": [
+      9900,
+      9901,
+      9902,
+      9903,
+      9904,
+      9905,
+      9906,
+      9907,
+      9908,
+      9909
+    ],
+    "configs": [
+      {
+        "name": "agg15",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "timing": "auto"
+        },
+        "weights": {
+          "riskScaleWithRevive": 0.15
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9905
+  ],
+  "results": [
+    {
+      "seed": 9905,
+      "name": "agg15",
+      "protocol": "auto",
+      "score": 9193,
+      "drops": 878,
+      "maxTier": 10,
+      "revives": 5,
+      "deaths": 6,
+      "ended": "over",
+      "marks": {
+        "50": 480,
+        "100": 829,
+        "150": 1413,
+        "200": 1827,
+        "250": 2405,
+        "300": 2876,
+        "350": 3403,
+        "400": 4640,
+        "500": 5527,
+        "600": 6654,
+        "800": 8481
+      },
+      "board": {
+        "50": {
+          "top": 497,
+          "n": 5,
+          "strand": 2,
+          "trapped": 1,
+          "tokens": 309,
+          "area": 0.183
+        },
+        "100": {
+          "top": 408,
+          "n": 14,
+          "strand": 4,
+          "trapped": 2,
+          "tokens": 560,
+          "area": 0.423
+        },
+        "150": {
+          "top": 445,
+          "n": 8,
+          "strand": 5,
+          "trapped": 4,
+          "tokens": 801,
+          "area": 0.357
+        },
+        "200": {
+          "top": 279,
+          "n": 19,
+          "strand": 10,
+          "trapped": 9,
+          "tokens": 1122,
+          "area": 0.612
+        },
+        "250": {
+          "top": 413,
+          "n": 12,
+          "strand": 4,
+          "trapped": 2,
+          "tokens": 1344,
+          "area": 0.493
+        },
+        "300": {
+          "top": 346,
+          "n": 17,
+          "strand": 10,
+          "trapped": 8,
+          "tokens": 1622,
+          "area": 0.648
+        },
+        "350": {
+          "top": 312,
+          "n": 20,
+          "strand": 8,
+          "trapped": 6,
+          "tokens": 1923,
+          "area": 0.739
+        },
+        "400": {
+          "top": 511,
+          "n": 10,
+          "strand": 4,
+          "trapped": 1,
+          "tokens": 157,
+          "area": 0.199
+        },
+        "500": {
+          "top": 335,
+          "n": 15,
+          "strand": 6,
+          "trapped": 4,
+          "tokens": 687,
+          "area": 0.506
+        },
+        "600": {
+          "top": 232,
+          "n": 17,
+          "strand": 9,
+          "trapped": 7,
+          "tokens": 1291,
+          "area": 0.643
+        },
+        "800": {
+          "top": 186,
+          "n": 25,
+          "strand": 12,
+          "trapped": 6,
+          "tokens": 2179,
+          "area": 0.874
+        }
+      },
+      "hist": {
+        "0": 2,
+        "1": 5,
+        "2": 1,
+        "3": 4,
+        "4": 3,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "8": 2,
+        "9": 1,
+        "10": 1
+      },
+      "tokens": 2400,
+      "droppedTokens": 4723,
+      "reviveLog": [],
+      "aliveAtDeath": 23,
+      "areaFracAtDeath": 0.923,
+      "tokensRemoved": 2048,
+      "tier10Pairs": 1,
+      "ballsAtDeath": 23,
+      "topAtDeath": 91,
+      "waitAvgFrames": 58.413439635535305,
+      "waitByChoiceAvg": 0,
+      "planMsAvg": 2342.682409225516,
+      "wallMs": 2063230
+    }
+  ]
+}

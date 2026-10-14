@@ -1,0 +1,133 @@
+{
+  "protocol": "auto",
+  "maxDrops": 1200,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "auto",
+    "maxDrops": 1200,
+    "seeds": [
+      9900,
+      9901,
+      9902,
+      9903,
+      9904,
+      9905,
+      9906,
+      9907,
+      9908,
+      9909
+    ],
+    "configs": [
+      {
+        "name": "default",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "timing": "auto"
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9900
+  ],
+  "results": [
+    {
+      "seed": 9900,
+      "name": "default",
+      "protocol": "auto",
+      "score": 4131,
+      "drops": 453,
+      "maxTier": 10,
+      "revives": 2,
+      "deaths": 3,
+      "ended": "over",
+      "marks": {
+        "50": 358,
+        "100": 806,
+        "150": 1317,
+        "200": 1735,
+        "250": 2373,
+        "300": 2847,
+        "350": 3155,
+        "400": 3783
+      },
+      "board": {
+        "50": {
+          "top": 531,
+          "n": 6,
+          "strand": 3,
+          "trapped": 1
+        },
+        "100": {
+          "top": 442,
+          "n": 9,
+          "strand": 3,
+          "trapped": 1
+        },
+        "150": {
+          "top": 421,
+          "n": 10,
+          "strand": 5,
+          "trapped": 2
+        },
+        "200": {
+          "top": 328,
+          "n": 16,
+          "strand": 9,
+          "trapped": 5
+        },
+        "250": {
+          "top": 459,
+          "n": 10,
+          "strand": 3,
+          "trapped": 2
+        },
+        "300": {
+          "top": 328,
+          "n": 14,
+          "strand": 8,
+          "trapped": 6
+        },
+        "350": {
+          "top": 267,
+          "n": 25,
+          "strand": 10,
+          "trapped": 8
+        },
+        "400": {
+          "top": 215,
+          "n": 23,
+          "strand": 10,
+          "trapped": 9
+        }
+      },
+      "hist": {
+        "0": 7,
+        "1": 5,
+        "2": 2,
+        "3": 4,
+        "4": 4,
+        "5": 1,
+        "6": 1,
+        "7": 2,
+        "8": 1,
+        "9": 1,
+        "10": 1
+      },
+      "tokens": 2265,
+      "tier10Pairs": 0,
+      "ballsAtDeath": 29,
+      "topAtDeath": 119,
+      "waitAvgFrames": 69.92273730684327,
+      "waitByChoiceAvg": 0.4105960264900662,
+      "planMsAvg": 2560.722020750552,
+      "wallMs": 1163913
+    }
+  ]
+}

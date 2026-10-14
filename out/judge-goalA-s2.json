@@ -1,0 +1,162 @@
+{
+  "protocol": "auto",
+  "maxDrops": 1200,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "auto",
+    "maxDrops": 1200,
+    "seeds": [
+      9900,
+      9901,
+      9902,
+      9903,
+      9904,
+      9905,
+      9906,
+      9907,
+      9908,
+      9909
+    ],
+    "configs": [
+      {
+        "name": "agg45",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "timing": "auto"
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9902
+  ],
+  "results": [
+    {
+      "seed": 9902,
+      "name": "agg45",
+      "protocol": "auto",
+      "score": 4192,
+      "drops": 451,
+      "maxTier": 10,
+      "revives": 2,
+      "deaths": 3,
+      "ended": "over",
+      "marks": {
+        "50": 352,
+        "100": 792,
+        "150": 1188,
+        "200": 1736,
+        "250": 2263,
+        "300": 2838,
+        "350": 3336,
+        "400": 3814
+      },
+      "board": {
+        "50": {
+          "top": 529,
+          "n": 5,
+          "strand": 2,
+          "trapped": 0,
+          "tokens": 212,
+          "area": 0.17
+        },
+        "100": {
+          "top": 448,
+          "n": 8,
+          "strand": 4,
+          "trapped": 1,
+          "tokens": 483,
+          "area": 0.309
+        },
+        "150": {
+          "top": 331,
+          "n": 17,
+          "strand": 8,
+          "trapped": 6,
+          "tokens": 762,
+          "area": 0.534
+        },
+        "200": {
+          "top": 308,
+          "n": 16,
+          "strand": 6,
+          "trapped": 5,
+          "tokens": 1012,
+          "area": 0.511
+        },
+        "250": {
+          "top": 455,
+          "n": 16,
+          "strand": 5,
+          "trapped": 2,
+          "tokens": 1240,
+          "area": 0.459
+        },
+        "300": {
+          "top": 319,
+          "n": 16,
+          "strand": 9,
+          "trapped": 6,
+          "tokens": 1582,
+          "area": 0.583
+        },
+        "350": {
+          "top": 226,
+          "n": 19,
+          "strand": 9,
+          "trapped": 9,
+          "tokens": 1868,
+          "area": 0.69
+        },
+        "400": {
+          "top": 248,
+          "n": 24,
+          "strand": 13,
+          "trapped": 10,
+          "tokens": 2118,
+          "area": 0.781
+        }
+      },
+      "hist": {
+        "0": 2,
+        "1": 9,
+        "2": 5,
+        "3": 5,
+        "5": 1,
+        "6": 3,
+        "7": 2,
+        "8": 1,
+        "9": 1,
+        "10": 1
+      },
+      "tokens": 2352,
+      "droppedTokens": 2392,
+      "reviveLog": [
+        {
+          "atDrop": 431,
+          "score": 4034,
+          "removedTokens": 32,
+          "removedBalls": 1,
+          "areaBefore": 0.888,
+          "areaAfter": 0.849
+        }
+      ],
+      "aliveAtDeath": 30,
+      "areaFracAtDeath": 0.975,
+      "tokensRemoved": 32,
+      "tier10Pairs": 0,
+      "ballsAtDeath": 30,
+      "topAtDeath": 110,
+      "waitAvgFrames": 60.24778761061947,
+      "waitByChoiceAvg": 0.046460176991150445,
+      "planMsAvg": 2935.7680500000024,
+      "wallMs": 1331016
+    }
+  ]
+}

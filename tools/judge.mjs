@@ -36,8 +36,24 @@ const ROOT = path.join(__dirname, '..');
 const shapes = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/shapes.json'), 'utf8'));
 E.setShapes(shapes);
 
-const MARKS = [50, 100, 150, 200, 250, 300, 350, 400, 500, 600];
+const MARKS = [50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 800, 1000];
 const WAIT_CAP_FRAMES = 180;      // 3 秒游戏时间（= planner.TIMING.maxWaitFrames）
+
+/* 盘上代币总量（只算活着的球）与占用面积占比 —— 撑到 1w 分的关键量：
+   每次投放期望带进 4.76 代币，而盘子能装的代币数取决于「果子多大」：
+   同样是 1000 代币，装在 tier-5（32 代币/颗）里要 2400px²/代币，
+   装在 tier-10（1024 代币/颗）里只要 47px²/代币。 */
+function boardMass(world) {
+  let tokens = 0, area = 0, n = 0;
+  for (const b of world.balls) {
+    if (b.dead) continue;
+    n++;
+    tokens += Math.pow(2, b.tier);
+    area += Math.PI * b.r * b.r;
+  }
+  const play = (E.CFG.W - 2 * E.CFG.WALL) * (E.CFG.H - 2 * E.CFG.WALL);
+  return { tokens, n, areaFrac: area / play };
+}
 
 function arg(name, dflt) {
   const i = process.argv.indexOf('--' + name);
@@ -66,6 +82,16 @@ export function playGame(seed, cfg, opts = {}) {
   const board = {};          // 第 N 手时的「盘面健康度」：堆顶高度 / 球数 / 最大等级
   let planMs = 0, planN = 0, revives = 0, deaths = 0, waitSum = 0;
   let preStrand = 0, preTrapped = 0, waitedByChoice = 0;
+  const reviveLog = [];
+  let droppedTokens = 0;      // 一共放进盘里的代币（材料账本的收入侧）
+  /* 神奶蛙对撞计数：每撞一次场上 tier10 会少两颗（+1 计数） */
+  let tier10Pairs = 1, lastTier10 = 0;
+  const countTier10 = (world) => {
+    let c = 0;
+    for (const b of world.balls) if (b.tier === 10) c++;
+    return c;
+  };
+  lastTier10 = countTier10(w);
 
   while (w.drops < maxDrops) {
     /* ① 推进到「可以并且应该出手」的时刻 */
@@ -82,7 +108,19 @@ export function playGame(seed, cfg, opts = {}) {
 
     if (w.over) {
       deaths++;
-      if (w.revives > 0) { E.revive(w); revives++; continue; }
+      if (w.revives > 0) {
+        const before = boardMass(w);
+        E.revive(w);
+        revives++;
+        const after = boardMass(w);
+        reviveLog.push({
+          atDrop: w.drops, score: w.score,
+          removedTokens: before.tokens - after.tokens,
+          removedBalls: before.n - after.n,
+          areaBefore: +before.areaFrac.toFixed(3), areaAfter: +after.areaFrac.toFixed(3),
+        });
+        continue;
+      }
       break;
     }
 
@@ -119,16 +157,35 @@ export function playGame(seed, cfg, opts = {}) {
     E.update(w, E.CFG.FIXED);
     if (w.over) {
       deaths++;
-      if (w.revives > 0) { E.revive(w); revives++; continue; }
+      if (w.revives > 0) {
+        const before = boardMass(w);
+        E.revive(w);
+        revives++;
+        /* 材料账本：这次复活清掉了多少代币（决定「一枚币能买多少余量」） */
+        const after = boardMass(w);
+        reviveLog.push({
+          atDrop: w.drops, score: w.score,
+          removedTokens: before.tokens - after.tokens,
+          removedBalls: before.n - after.n,
+          areaBefore: +before.areaFrac.toFixed(3), areaAfter: +after.areaFrac.toFixed(3),
+        });
+        continue;
+      }
       break;
     }
+    const pendingBefore = w.pending;      // 这颗的等级（dropAt 之后 pending 就换下一颗了）
     E.dropAt(w, dec.x);
+    droppedTokens += Math.pow(2, pendingBefore);
+    { const c10 = countTier10(w); if (c10 < lastTier10 - 1) tier10Pairs++; lastTier10 = c10; }
     for (const m of MARKS) {
       if (marks[m] === undefined && w.drops >= m) {
         marks[m] = w.score;
         /* ⚠️ 必须记**落子前**的堆顶：落子后那颗球悬在 y=74 的投放点，
            stackTop 会被它顶到 40~57，量出来的是投放点而不是盘面（第一版踩过） */
-        board[m] = { top: Math.round(preTop), n: preN, strand: preStrand, trapped: preTrapped };
+        const bm = boardMass(w);
+        let t10 = 0, t9 = 0, mx = 0;
+        for (const bb of w.balls) { if (bb.dead) continue; if (bb.tier === 10) t10++; else if (bb.tier === 9) t9++; if (bb.tier > mx) mx = bb.tier; }
+        board[m] = { top: Math.round(preTop), n: preN, strand: preStrand, trapped: preTrapped, tokens: bm.tokens, area: +bm.areaFrac.toFixed(3), t10, t9, maxTier: mx };
       }
     }
   }
@@ -136,11 +193,33 @@ export function playGame(seed, cfg, opts = {}) {
   let maxTier = 0;
   for (const b of w.balls) if (b.tier > maxTier) maxTier = b.tier;
 
+  /* 死亡/收尾快照（撑到 1w 分要 1000 手以上，所以「活多久 + 死在什么盘面」才是主指标）：
+     tokens = 盘上**活着**的未兑现代币总量；hist = 各等级颗数；
+     droppedTokens = 一共投进去多少代币（收入侧）；拿走侧 = 复活清掉的 + 神奶蛙对撞销毁的。
+     tier10Pairs = 神奶蛙对撞次数（每次销毁 2048 代币、+500 分、+1 币，是唯一的泄压阀）。 */
+  const hist = {};
+  let tokens = 0, alive = 0, areaSum = 0;
+  for (const b of w.balls) {
+    if (b.dead) continue;
+    alive++;
+    hist[b.tier] = (hist[b.tier] || 0) + 1;
+    tokens += Math.pow(2, b.tier);
+    areaSum += Math.PI * b.r * b.r;
+  }
+  const playArea = (E.CFG.W - 2 * E.CFG.WALL) * (E.CFG.H - 2 * E.CFG.WALL);
+
   return {
     seed, name: cfg.name, protocol,
     score: w.score, drops: w.drops, maxTier, revives, deaths,
     ended: w.over ? 'over' : (w.drops >= maxDrops ? 'cap' : 'stop'),
     marks, board,
+    hist, tokens, droppedTokens, reviveLog,
+    revivesGiven: w.reviveGiven,                       // 一共拿到过几枚币（分数给的 + 神蛙对撞给的）
+    coinsFromScore: Math.floor(w.score / 2000),
+    tier10Pairs: Math.max(0, w.reviveGiven - Math.floor(w.score / 2000)),   // 神蛙对撞次数（每次 +1 币）
+    aliveAtDeath: alive, areaFracAtDeath: +(areaSum / playArea).toFixed(3),
+    tokensRemoved: reviveLog.reduce((a, r) => a + r.removedTokens, 0) + Math.max(0, w.reviveGiven - Math.floor(w.score / 2000)) * 2048,
+    ballsAtDeath: w.balls.length, topAtDeath: Math.round(E.stackTop(w)),
     waitAvgFrames: planN ? waitSum / Math.max(1, planN) : 0,
     waitByChoiceAvg: planN ? waitedByChoice / Math.max(1, planN) : 0,
     planMsAvg: planN ? planMs / planN : 0,

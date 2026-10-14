@@ -560,7 +560,13 @@ function innerOf(world, st, cache, it) {
     const sim1 = E.cloneWorld(world);
     sim1.mergedMaxTier = -1; sim1.freed = 0;
     E.dropAt(sim1, it.x);
-    runSettle(sim1, st.h2, st.quiet + 0.6);
+    /* 第二层的落子时机：
+       · 默认（ply2Frames=0）——「等盘面完全稳定」（h2 秒）再问"下一颗丢哪"，
+         这是历史行为，README 11.3 记过它和线上打法不一致：线上是冷却一结束就投。
+       · ply2Frames=N —— 改成推 N 帧（22 帧 = 360ms 冷却）之后再丢第二颗，
+         也就是让两层搜索问的问题和线上**同一个时刻**（第十二/十六节同源）。 */
+    if (st.ply2Frames > 0) advanceFrames(sim1, st.ply2Frames);
+    else runSettle(sim1, st.h2, st.quiet + 0.6);
     e = { sim1, inners: new Map() };
     cache.set(it.x, e);
   }
@@ -690,6 +696,9 @@ function stageCtx(world, opts, ctx) {
     h1: opts.h1 ?? 1.2,
     h2: opts.h2 ?? 2.6,
     quiet: opts.quiet ?? 0.9,
+    /* 第二层落子时机：0 = 老行为（等完全稳定）；>0 = 推这么多帧后再落第二颗
+       （22 帧 ≈ 360ms 冷却，与线上一致 —— README 11.3 那条结构性错配） */
+    ply2Frames: opts.ply2Frames ?? 0,
     /* 推演里允不允许用复活币续命。allowRevive:false = 保守打法：
        越线就直接判死（dead 一票否决），不把"反正有币"算进落点价值。 */
     allowRevive: opts.allowRevive !== false,
