@@ -65,7 +65,7 @@ export function playGame(seed, cfg, opts = {}) {
   const marks = {};
   const board = {};          // 第 N 手时的「盘面健康度」：堆顶高度 / 球数 / 最大等级
   let planMs = 0, planN = 0, revives = 0, deaths = 0, waitSum = 0;
-  let preStrand = 0, preTrapped = 0;
+  let preStrand = 0, preTrapped = 0, waitedByChoice = 0;
 
   while (w.drops < maxDrops) {
     /* ① 推进到「可以并且应该出手」的时刻 */
@@ -91,13 +91,27 @@ export function playGame(seed, cfg, opts = {}) {
     const savedRng = w.rng;
     w.rng = planRng;
     const tp = P.now();
-    let dec;
+    let dec, delayFrames = 0;
     try {
-      dec = P.searchBest(w, think);
+      if (protocol === 'auto') {
+        /* 「时机由算法自己算」：planner 内部会比较 现在丢 / 等安静 两边的推演价值，
+           返回 delayFrames = 需要等多少帧（快进模式下真的等这么多帧再落子） */
+        dec = P.plan(w, { ...think, timing: 'auto' });
+        delayFrames = Math.max(0, dec.delayFrames | 0);
+      } else {
+        dec = P.searchBest(w, think);
+      }
     } finally {
       w.rng = savedRng;
     }
     planMs += P.now() - tp; planN++;
+
+    /* ②b 该等就等：按算法给出的帧数推进真世界（这正是 turbo 驱动做的事） */
+    for (let k = 0; k < delayFrames; k++) {
+      E.update(w, E.CFG.FIXED);
+      if (w.over) break;
+    }
+    if (delayFrames) waitedByChoice += delayFrames;
 
     /* ③ 下一帧才真正落子（对应 planLifecycle 里 frame >= dropFrame 的判断） */
     const preTop = E.stackTop(w), preN = w.balls.length;   // 落子前的盘面（见下）
@@ -128,6 +142,7 @@ export function playGame(seed, cfg, opts = {}) {
     ended: w.over ? 'over' : (w.drops >= maxDrops ? 'cap' : 'stop'),
     marks, board,
     waitAvgFrames: planN ? waitSum / Math.max(1, planN) : 0,
+    waitByChoiceAvg: planN ? waitedByChoice / Math.max(1, planN) : 0,
     planMsAvg: planN ? planMs / planN : 0,
     wallMs: 0,
   };

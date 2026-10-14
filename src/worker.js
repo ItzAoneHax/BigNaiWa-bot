@@ -26,13 +26,28 @@ self.onmessage = (e) => {
     return;
   }
 
-  /* 延迟补偿：把盘面往前推 n 帧，返回推进后的快照（实时模式下用） */
+  /* 延迟补偿 / 投掷时机：把盘面往前推 n 帧（可选「推进到安静就停」），返回推进后的快照 */
   if (m.type === 'advance') {
     try {
       const w = E.makeWorld({ rng: Math.random });
       E.adoptFromGame(w, m.state, null, m.state.nowMs);
-      P.advanceFrames(w, m.frames | 0);
-      self.postMessage({ type: 'advance', id: m.id, ok: true, state: E.snapshotOf(w, w.now) });
+      const maxFrames = m.frames | 0;
+      const qs = m.quietSpeed || 0;
+      let i = 0;
+      if (qs > 0) {
+        for (; i < maxFrames; i++) {
+          E.update(w, E.CFG.FIXED);
+          if (w.over) break;
+          if (i > 6 && E.maxSpeed(w) < qs) { i++; break; }
+        }
+      } else {
+        P.advanceFrames(w, maxFrames);
+        i = maxFrames;
+      }
+      self.postMessage({
+        type: 'advance', id: m.id, ok: true,
+        state: E.snapshotOf(w, w.now), frames: i, over: !!w.over,
+      });
     } catch (err) {
       self.postMessage({ type: 'advance', id: m.id, ok: false, error: String((err && err.stack) || err) });
     }

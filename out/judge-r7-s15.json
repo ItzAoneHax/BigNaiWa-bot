@@ -1,0 +1,101 @@
+{
+  "protocol": "auto",
+  "maxDrops": 250,
+  "shapeMode": null,
+  "spec": {
+    "protocol": "auto",
+    "maxDrops": 250,
+    "seeds": [
+      9800,
+      9801,
+      9802,
+      9803,
+      9804,
+      9805,
+      9806,
+      9807,
+      9808,
+      9809,
+      9810,
+      9811,
+      9812,
+      9813,
+      9814,
+      9815
+    ],
+    "configs": [
+      {
+        "name": "timed",
+        "think": {
+          "step": 8,
+          "h1": 1.2,
+          "h2": 2.6,
+          "topK": 8,
+          "lookahead": 2,
+          "innerTop": 4,
+          "nextMode": "known",
+          "timing": "auto"
+        }
+      }
+    ]
+  },
+  "seeds": [
+    9815
+  ],
+  "results": [
+    {
+      "seed": 9815,
+      "name": "timed",
+      "protocol": "auto",
+      "score": 2164,
+      "drops": 250,
+      "maxTier": 9,
+      "revives": 1,
+      "deaths": 1,
+      "ended": "cap",
+      "marks": {
+        "50": 475,
+        "100": 1009,
+        "150": 1316,
+        "200": 1681,
+        "250": 2164
+      },
+      "board": {
+        "50": {
+          "top": 501,
+          "n": 6,
+          "strand": 2,
+          "trapped": 0
+        },
+        "100": {
+          "top": 467,
+          "n": 5,
+          "strand": 2,
+          "trapped": 1
+        },
+        "150": {
+          "top": 399,
+          "n": 16,
+          "strand": 6,
+          "trapped": 5
+        },
+        "200": {
+          "top": 275,
+          "n": 28,
+          "strand": 11,
+          "trapped": 6
+        },
+        "250": {
+          "top": 203,
+          "n": 26,
+          "strand": 13,
+          "trapped": 11
+        }
+      },
+      "waitAvgFrames": 60.064,
+      "waitByChoiceAvg": 0,
+      "planMsAvg": 1486.0441732000002,
+      "wallMs": 372552
+    }
+  ]
+}

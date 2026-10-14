@@ -268,6 +268,19 @@ export function createBot(userOpts = {}) {
     if (!pool.length) return solveInline(state, thinkOpts);
     const w = E.makeWorld({ rng: Math.random });
     E.adoptFromGame(w, state, null, state.nowMs);
+    /* 快进模式：时机交给算法自己算（现在丢 vs 等安静，按推演价值比大小）。
+       时钟冻着，多算一遍不花游戏时间；实时模式不折腾（游戏在跑，推不到那么准）。 */
+    if (bot.driverMode === 'turbo' && thinkOpts.timing !== 'now' && pool.length) {
+      const advance = async (srcWorld, maxWait, quietSpeed) => {
+        const s = E.snapshotOf(srcWorld, srcWorld.now);
+        const adv = await ask(pool[0], { type: 'advance', state: s, frames: maxWait, quietSpeed });
+        if (!adv || !adv.state) return null;
+        const w2 = E.makeWorld({ rng: Math.random });
+        E.adoptFromGame(w2, adv.state, null, adv.state.nowMs);
+        return { world: w2, frames: adv.frames, over: adv.over };
+      };
+      return await P.planParallelTimed(w, thinkOpts, makeExec(state, thinkOpts), advance);
+    }
     return await P.planParallel(w, thinkOpts, makeExec(state, thinkOpts));
   }
 
@@ -353,6 +366,9 @@ export function createBot(userOpts = {}) {
   function shouldHoldForQuiet() {
     const th = opts.think;
     if (th.holdForQuiet === false || th.timing === 'now' || bot.driverMode === 'passive') return false;
+    /* 快进模式下时机由 planParallelTimed() 自己算（现在丢 vs 等安静比价值），
+       不需要在驱动层粗放地「先等到安静再想」—— 那样就永远不会考虑"现在就丢"。 */
+    if (bot.driverMode === 'turbo') return false;
     const S = bot.S;
     if (!S || S.over || S.danger) { holdFrames = 0; holdStart = 0; return false; }
     const quietSpeed = th.quietSpeed ?? 60;

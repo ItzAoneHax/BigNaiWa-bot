@@ -112,7 +112,7 @@ export function createIsland(bot) {
     () => opts.reviveStyle || 'aggressive', (v) => { opts.reviveStyle = v; });
   const segStrength = segment('搜索', Object.keys(STRENGTH).map(k => ({ label: STRENGTH[k].label, value: k })),
     () => bot.strength || 'normal', (v) => { bot.strength = v; Object.assign(opts.think, STRENGTH[v]); });
-  const segTiming = segment('投掷时机', [{ label: '自动', value: 'auto' }, { label: '立刻', value: 'now' }, { label: '等稳', value: 'settle' }],
+  const segTiming = segment('投掷时机', [{ label: '每手算', value: 'auto' }, { label: '立刻', value: 'now' }, { label: '等稳', value: 'settle' }],
     () => opts.think.timing, (v) => { opts.think.timing = v; });
 
   /* ---- 动作 ---- */

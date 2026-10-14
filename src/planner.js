@@ -818,6 +818,59 @@ export async function planParallel(world, opts, exec) {
 }
 
 /* ============================================================================
+ *  投掷时机（并行版）：现在丢 vs 等盘面安静再丢 —— 由**推演价值**自己算
+ *
+ *  这是 README 第九节 9.3-1 记的那个缺口的正式修复：原来只有顺序版 plan()
+ *  有时机比较，浏览器走的 planParallel() 没有，所以「投掷时机」开关是摆设。
+ *  现在两条路径用的是同一套判据（同一时刻截止、同一评估函数）：
+ *
+ *    ① 先在**当前盘面**上算一遍 → value_now（这一手现在丢值多少）
+ *    ② 让盘面自己推进到安静（最多 maxWaitFrames 帧，推进期间自己合出来的分算进去）
+ *    ③ 在**安静后的盘面**上再算一遍 → laterValue = value_later + 等待期间得分 − 等待惩罚
+ *    ④ 谁高选谁；等不及/等死/等不到安静 → 一律按 ① 出手
+ *
+ *  代价是每手两次完整搜索（快进模式下这不算分：时钟冻着，等待只是多推几十帧物理）。
+ *  advance 由调用方提供（浏览器走 Worker，自测走克隆），返回值形如
+ *     { world, frames, over }  —— 推进后的世界 / 实际推进帧数 / 是否在推进中判负
+ * ========================================================================== */
+export async function planParallelTimed(world, opts, exec, advance) {
+  const t0 = now();
+  const timing = opts.timing || 'auto';
+  const nowRes = await planParallel(world, opts, exec);
+  if (timing === 'now') return { ...nowRes, choice: 'now', delayFrames: 0 };
+
+  const quietSpeed = opts.quietSpeed ?? TIMING.quietSpeed;
+  const maxWait = opts.maxWaitFrames ?? TIMING.maxWaitFrames;
+  /* 盘面本来就安静 → 没什么可等的 */
+  if (E.maxSpeed(world) < quietSpeed) return { ...nowRes, choice: 'quiet', delayFrames: 0 };
+  if (!advance) return { ...nowRes, choice: 'now', delayFrames: 0 };
+
+  let adv = null;
+  try { adv = await advance(world, maxWait, quietSpeed); } catch (e) { adv = null; }
+  if (!adv || !adv.world || !adv.frames || adv.over) {
+    return { ...nowRes, choice: 'now', delayFrames: 0, waitSkipped: adv && adv.over ? 'over' : 'none' };
+  }
+
+  const laterRes = await planParallel(adv.world, opts, exec);
+  const gained = adv.world.score - world.score;          // 等待期间自己合出来的分
+  const penalty = (opts.waitPenaltyPerFrame ?? TIMING.waitPenaltyPerFrame) * adv.frames;
+  const laterValue = laterRes.value + gained - penalty;
+
+  if (laterValue > nowRes.value) {
+    return {
+      ...laterRes, value: laterValue, delayFrames: adv.frames, choice: 'settle',
+      waitFrames: adv.frames, waitGain: gained, nowValue: nowRes.value, nowX: nowRes.x,
+      ms: Math.round(now() - t0),
+    };
+  }
+  return {
+    ...nowRes, choice: 'now', delayFrames: 0,
+    laterValue, laterX: laterRes.x, waitFrames: adv.frames, waitGain: gained,
+    ms: Math.round(now() - t0),
+  };
+}
+
+/* ============================================================================
  *  投掷时机：现在丢，还是等这一波连锁/抖动安静下来再丢？
  *
  *  这是真问题：合成的一瞬间棋盘是「乱」的（水果在弹、在滚、连锁还没走完）。
